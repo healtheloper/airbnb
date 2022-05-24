@@ -41,16 +41,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      templateParameters: {
-        env: process.env.NODE_ENV === 'production' ? '' : 'development',
-      },
-      minify:
-        process.env.NODE_ENV === 'production'
-          ? {
-              collapseWhitespace: true,
-              removeComments: true,
-            }
-          : false,
     }),
   ],
   stats: 'errors-only',
