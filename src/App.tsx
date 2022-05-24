@@ -1,12 +1,21 @@
-import Button from '@mui/material/Button';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Todos from '@components/Todos';
+import GlobalStyles from '@common/GlobalStyles';
+import Layout from '@components/Layout';
+
+import MainPage from './pages/MainPage';
 
 export default function App() {
   return (
-    <div>
-      <Todos />
-      <Button>Hi</Button>
+    <div className="App">
+      <GlobalStyles />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<MainPage />} />
+          </Route>
+        </Routes>
+      </Router>
     </div>
   );
 }
