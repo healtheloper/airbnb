@@ -6,15 +6,10 @@ module.exports = {
   },
   settings: {
     'import/resolver': {
-      alias: {
-        map: [
-          ['@src', './src'],
-          ['@components', './src/components'],
-        ],
-      },
+      typescript: {},
     },
   },
-  extends: ['airbnb', 'airbnb/hooks'],
+  extends: ['airbnb', 'airbnb/hooks', 'prettier'],
   parser: '@typescript-eslint/parser',
   rules: {
     // 화살표 함수의 파라미터가 하나일때 괄호 생략
@@ -37,6 +32,16 @@ module.exports = {
           caseInsensitive: true,
         },
         'newlines-between': 'always',
+      },
+    ],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
       },
     ],
   },
