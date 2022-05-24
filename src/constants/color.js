@@ -9,6 +9,7 @@ const color = {
   black: '#010101',
   primary: '#E84C60',
   secondary: '#118917',
+  bgColor: '#E5E5E5',
 };
 
 export default color;
