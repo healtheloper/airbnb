@@ -1,0 +1,24 @@
+{
+  "name": "airbnb",
+  "version": "1.0.0",
+  "description": "그룹 프로젝트 #4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/healtheloper/airbnb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/healtheloper/airbnb/issues"
+  },
+  "homepage": "https://github.com/healtheloper/airbnb#readme",
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  }
+}
