@@ -14,7 +14,7 @@ module.exports = {
       },
     },
   },
-  extends: ['airbnb', 'airbnb/hooks', 'plugin:prettier/recommended'],
+  extends: ['airbnb', 'airbnb/hooks'],
   parser: '@typescript-eslint/parser',
   rules: {
     // 화살표 함수의 파라미터가 하나일때 괄호 생략
@@ -28,5 +28,16 @@ module.exports = {
     'react/jsx-filename-extension': ['warn', { extensions: ['ts', 'tsx'] }],
     // React v17 부터는 React 를 import 하지 않아도 되어 off
     'react/react-in-jsx-scope': 'off',
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', 'index'],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+        'newlines-between': 'always',
+      },
+    ],
   },
 };
