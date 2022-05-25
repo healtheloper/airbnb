@@ -1,6 +1,7 @@
 import { Container, Box } from '@mui/material';
 import { useState } from 'react';
 
+import FlexBox from '@components/FlexBox';
 import BigSearchBar from '@components/Header/BigSearchBar';
 import Category from '@components/Header/Category';
 import Logo from '@components/Header/Logo';
@@ -16,16 +17,15 @@ export default function Header() {
   };
 
   return (
-    <Box
+    <FlexBox
       component="header"
       sx={{
         backgroundColor: color.white,
-        display: 'flex',
-        justifyContent: 'space-between',
-        height: view ? '190px' : '94px',
+        height: view ? '11.875rem' : '5.875rem',
         padding: '1.5rem 2rem',
         transition: 'height .2s ease',
       }}
+      jc="space-between"
     >
       <Logo />
       <Container maxWidth="sm">
@@ -39,6 +39,6 @@ export default function Header() {
         )}
       </Container>
       <UserInfo />
-    </Box>
+    </FlexBox>
   );
 }

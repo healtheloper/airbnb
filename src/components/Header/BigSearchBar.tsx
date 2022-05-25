@@ -1,60 +1,56 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Box } from '@mui/material';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
+import { Box, Divider, Typography } from '@mui/material';
 
+import FlexBox from '@components/FlexBox';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
 
 export default function BigSearchBar() {
   return (
-    <Box
+    <FlexBox
       component="article"
       sx={{
-        width: '916px',
-        height: '76px',
-        display: 'flex',
-        // justifyContent: 'space-between',
-        alignItems: 'center',
+        width: '57.25rem',
+        height: '4.75rem',
         padding: '1rem',
-        marginTop: '20px',
+        marginTop: '1.25rem',
         border: 1,
         borderColor: color.grey4,
-        borderRadius: '60px',
+        borderRadius: '3.75rem',
         position: 'absolute',
       }}
+      ai="center"
     >
-      <Box sx={{ display: 'flex', width: '40%' }}>
-        <Box sx={{ padding: '0 24px' }}>
-          <Typography>체크인</Typography>
-          <Typography sx={{ color: color.grey2 }}>날짜 입력</Typography>
+      <FlexBox sx={{ width: '40%' }}>
+        <Box sx={{ padding: '0 1.5rem' }}>
+          <Typography variant="h6">체크인</Typography>
+          <Typography variant="input1">날짜 입력</Typography>
         </Box>
-        <Box sx={{ padding: '0 24px' }}>
-          <Typography>체크아웃</Typography>
-          <Typography sx={{ color: color.grey2 }}>날짜 입력</Typography>
+        <Box sx={{ padding: '0 1.5rem' }}>
+          <Typography variant="h6">체크아웃</Typography>
+          <Typography variant="input1">날짜 입력</Typography>
         </Box>
+      </FlexBox>
+      <Divider orientation="vertical" flexItem />
+      <Box sx={{ padding: '0 1.5rem', width: '30%' }}>
+        <Typography variant="h6">요금</Typography>
+        <Typography variant="input1">금액대 설정</Typography>
       </Box>
       <Divider orientation="vertical" flexItem />
-      <Box sx={{ padding: '0 24px', width: '30%' }}>
-        <Typography>요금</Typography>
-        <Typography sx={{ color: color.grey2 }}>금액대 설정</Typography>
+      <Box sx={{ padding: '0 1.5rem', width: '30%' }}>
+        <Typography variant="h6">인원</Typography>
+        <Typography variant="input1">게스트 추가</Typography>
       </Box>
-      <Divider orientation="vertical" flexItem />
-      <Box sx={{ padding: '0 24px', width: '30%' }}>
-        <Typography>인원</Typography>
-        <Typography sx={{ color: color.grey2 }}>게스트 추가</Typography>
-      </Box>
-      <Box
+      <FlexBox
         component="div"
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
           width: '2rem',
           height: '2rem',
           borderRadius: '2rem',
-          background: '#E84C60',
+          background: color.primary,
         }}
+        jc="center"
+        ai="center"
       >
         <SearchIcon
           sx={{
@@ -62,7 +58,7 @@ export default function BigSearchBar() {
             fontSize: fontSize.fontDefault,
           }}
         />
-      </Box>
-    </Box>
+      </FlexBox>
+    </FlexBox>
   );
 }

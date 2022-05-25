@@ -1,31 +1,24 @@
-import { Box } from '@mui/material';
+import { Link, Breadcrumbs } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 
 import color from '@constants/color';
-import fontSize from '@constants/fontSize';
 
-const Title = styled(Typography)({
-  padding: 0,
-  margin: '0 12px',
-  fontSize: fontSize.fontDefault,
-  cursor: 'pointer',
+const StyledBreadcrumb = styled(Link)({
   color: color.grey1,
+  textDecorationColor: color.white,
+  cursor: 'pointer',
   '&:hover': {
     color: color.black,
+    fontWeight: 700,
   },
 });
 
 export default function Category() {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-      }}
-    >
-      <Title>숙소</Title>
-      <Title>체험</Title>
-      <Title>온라인 체험</Title>
-    </Box>
+    <Breadcrumbs separator="" aria-label="headerCategory">
+      <StyledBreadcrumb>숙소</StyledBreadcrumb>
+      <StyledBreadcrumb>체험</StyledBreadcrumb>
+      <StyledBreadcrumb>온라인 체험</StyledBreadcrumb>
+    </Breadcrumbs>
   );
 }
