@@ -28,7 +28,7 @@ export default function UserInfo() {
         TransitionComponent={Fade}
         PaperProps={{
           sx: {
-            marginTop: '10px',
+            marginTop: '0.625rem',
             minWidth: '10rem',
           },
         }}
