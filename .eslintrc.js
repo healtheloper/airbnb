@@ -12,6 +12,7 @@ module.exports = {
   extends: ['airbnb', 'airbnb/hooks', 'prettier'],
   parser: '@typescript-eslint/parser',
   rules: {
+    'react/require-default-props': 'off',
     // 화살표 함수의 파라미터가 하나일때 괄호 생략
     'arrow-parens': ['warn', 'as-needed'],
     // 사용하지 않는 변수가 있을때 빌드에러가 나던 규칙 해제
