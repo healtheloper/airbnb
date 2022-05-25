@@ -1,6 +1,7 @@
 import { Link, Breadcrumbs } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import { fadeIn } from '@common/keyframes';
 import color from '@constants/color';
 
 const StyledBreadcrumb = styled(Link)({
@@ -15,7 +16,11 @@ const StyledBreadcrumb = styled(Link)({
 
 export default function Category() {
   return (
-    <Breadcrumbs separator="" aria-label="headerCategory">
+    <Breadcrumbs
+      separator=""
+      aria-label="headerCategory"
+      sx={{ animation: `${fadeIn} .3s ease` }}
+    >
       <StyledBreadcrumb>숙소</StyledBreadcrumb>
       <StyledBreadcrumb>체험</StyledBreadcrumb>
       <StyledBreadcrumb>온라인 체험</StyledBreadcrumb>

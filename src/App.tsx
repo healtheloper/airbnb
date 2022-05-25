@@ -1,5 +1,5 @@
-import { GlobalStyles } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
+import { CssBaseline } from '@mui/material';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import { ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ function MyGlobalStyles() {
         body: {
           backgroundColor: color.bgColor,
           color: color.grey1,
+          height: '100vh',
         },
       }}
     />
