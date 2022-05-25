@@ -1,6 +1,7 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Divider, Typography } from '@mui/material';
 
+import { fadeIn } from '@common/keyframes';
 import FlexBox from '@components/FlexBox';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
@@ -18,6 +19,7 @@ export default function BigSearchBar() {
         borderColor: color.grey4,
         borderRadius: '3.75rem',
         position: 'absolute',
+        animation: `${fadeIn} .3s ease`,
       }}
       ai="center"
     >
