@@ -4,7 +4,7 @@ import { Fab } from '@mui/material';
 
 export default function UserInfo() {
   return (
-    <Fab variant="extended">
+    <Fab variant="extended" color="info">
       <MenuIcon />
       <PersonIcon />
     </Fab>
