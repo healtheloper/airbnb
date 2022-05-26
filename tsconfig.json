@@ -16,7 +16,8 @@
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],
       "@common/*": ["src/common/*"],
-      "@constants/*": ["src/constants/*"]
+      "@constants/*": ["src/constants/*"],
+      "@mocks/*": ["src/mocks/*"]
     }
   },
   "include": ["src"],
