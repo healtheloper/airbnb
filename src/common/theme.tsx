@@ -24,6 +24,11 @@ export const theme = createTheme({
       color: color.grey3,
       fontSize: fontSize.fontSmall,
     },
+    footer1: {
+      color: color.grey1,
+      fontSize: fontSize.fontDefault,
+      fontWeight: 400,
+    },
   },
   components: {
     MuiTypography: {

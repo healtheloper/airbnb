@@ -16,6 +16,10 @@ function MyGlobalStyles() {
           backgroundColor: color.bgColor,
           color: color.grey1,
         },
+        ul: {
+          listStyle: 'none',
+          paddingLeft: 0,
+        },
       }}
     />
   );
