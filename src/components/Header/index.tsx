@@ -1,7 +1,8 @@
-import { Container, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 
 import FlexBox from '@components/FlexBox';
+import Background from '@components/Header/Background';
 import BigSearchBar from '@components/Header/BigSearchBar';
 import Category from '@components/Header/Category';
 import Logo from '@components/Header/Logo';
@@ -44,28 +45,36 @@ export default function Header() {
   }, [closeBigSearchBar]);
 
   return (
-    <FlexBox
-      component="header"
-      sx={{
-        backgroundColor: color.white,
-        height: isFocus ? '11.875rem' : '5.875rem',
-        padding: '1.5rem 2rem',
-        transition: 'height .2s ease',
-      }}
-      jc="space-between"
-    >
-      <Logo />
-      <Container maxWidth="sm">
-        {isFocus ? (
-          <Box>
-            <Category />
-            <BigSearchBar />
-          </Box>
-        ) : (
-          <MiniSearchBar handleSearchBarOnClick={handleSearchBarOnClick} />
-        )}
-      </Container>
-      <UserInfo />
-    </FlexBox>
+    <>
+      <Background />
+      <FlexBox
+        component="header"
+        sx={{
+          width: '90rem',
+          height: isFocus ? '11.875rem' : '5.875rem',
+          padding: '1.5rem 2rem',
+          transition: 'height .2s ease',
+          position: 'fixed',
+          margin: '0 auto',
+          top: 0,
+          left: 0,
+          right: 0,
+        }}
+        jc="space-between"
+      >
+        <Logo />
+        <Box>
+          {isFocus ? (
+            <FlexBox di="column" ai="center">
+              <Category />
+              <BigSearchBar />
+            </FlexBox>
+          ) : (
+            <MiniSearchBar handleSearchBarOnClick={handleSearchBarOnClick} />
+          )}
+        </Box>
+        <UserInfo />
+      </FlexBox>
+    </>
   );
 }

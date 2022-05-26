@@ -6,7 +6,7 @@ import color from '@constants/color';
 
 const StyledBreadcrumb = styled(Link)({
   color: color.grey1,
-  textDecorationColor: color.white,
+  textDecorationColor: 'transparent',
   cursor: 'pointer',
   '&:hover': {
     color: color.black,

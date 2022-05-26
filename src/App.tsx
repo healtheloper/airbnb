@@ -15,7 +15,6 @@ function MyGlobalStyles() {
         body: {
           backgroundColor: color.bgColor,
           color: color.grey1,
-          height: '100vh',
         },
       }}
     />

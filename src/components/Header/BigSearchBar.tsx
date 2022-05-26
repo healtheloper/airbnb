@@ -13,12 +13,10 @@ export default function BigSearchBar() {
       sx={{
         width: '57.25rem',
         height: '4.75rem',
-        padding: '1rem',
         marginTop: '1.25rem',
         border: 1,
         borderColor: color.grey4,
         borderRadius: '3.75rem',
-        position: 'absolute',
         animation: `${fadeIn} .3s ease`,
       }}
       ai="center"
