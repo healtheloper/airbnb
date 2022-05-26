@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-import bgImage from '../../../public/hero-img.png';
+import bgImage from '@assets/hero-img.png';
 
 export default function Background() {
   return (
