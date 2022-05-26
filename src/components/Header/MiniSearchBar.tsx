@@ -18,12 +18,12 @@ export default function MiniSearchBar({
       sx={{
         width: '18.75rem',
         height: '3rem',
+        margin: '0 auto',
         padding: '1rem 0.5rem',
         borderRadius: '2rem',
         gap: '1rem',
         border: 1,
         borderColor: color.grey4,
-        boxSizing: 'border-box',
         cursor: 'pointer',
         '&:hover': {
           boxShadow:
