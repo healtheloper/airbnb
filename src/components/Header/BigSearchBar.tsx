@@ -1,5 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Divider, Fab, Typography } from '@mui/material';
 
 import { fadeIn } from '@common/keyframes';
 import FlexBox from '@components/FlexBox';
@@ -11,6 +11,7 @@ export default function BigSearchBar() {
     <FlexBox
       component="article"
       sx={{
+        backgroundColor: color.white,
         width: '57.25rem',
         height: '4.75rem',
         marginTop: '1.25rem',
@@ -18,6 +19,7 @@ export default function BigSearchBar() {
         borderColor: color.grey4,
         borderRadius: '3.75rem',
         animation: `${fadeIn} .3s ease`,
+        px: '1rem',
       }}
       ai="center"
     >
@@ -41,24 +43,15 @@ export default function BigSearchBar() {
         <Typography variant="h6">인원</Typography>
         <Typography variant="input1">게스트 추가</Typography>
       </Box>
-      <FlexBox
-        component="div"
-        sx={{
-          width: '2rem',
-          height: '2rem',
-          borderRadius: '2rem',
-          background: color.primary,
-        }}
-        jc="center"
-        ai="center"
-      >
+      <Fab variant="extended" color="primary" sx={{ width: '6rem' }}>
         <SearchIcon
           sx={{
             color: color.white,
             fontSize: fontSize.fontDefault,
           }}
         />
-      </FlexBox>
+        <span>검색</span>
+      </Fab>
     </FlexBox>
   );
 }

@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { useEffect } from 'react';
 
 import FlexBox from '@components/FlexBox';
@@ -22,33 +22,39 @@ export default function Header() {
   }, [isFocus]);
 
   return (
-    <FlexBox
+    <Box
       component="header"
       sx={{
-        width: '90rem',
         height: isFocus ? '11.875rem' : '5.875rem',
         padding: '1.5rem 2rem',
-        transition: 'height .2s ease',
         position: 'fixed',
         margin: '0 auto',
         top: 0,
         left: 0,
         right: 0,
       }}
-      jc="space-between"
     >
-      <Logo />
-      <Box>
-        {isFocus ? (
-          <FlexBox di="column" ai="center">
-            <Category />
-            <BigSearchBar />
-          </FlexBox>
-        ) : (
-          <MiniSearchBar />
-        )}
-      </Box>
-      <UserInfo />
-    </FlexBox>
+      <Container maxWidth="lg">
+        <FlexBox
+          sx={{
+            transition: 'height .2s ease',
+          }}
+          jc="space-between"
+        >
+          <Logo />
+          <Container maxWidth={isFocus ? 'md' : 'sm'} sx={{ mx: 0 }}>
+            {isFocus ? (
+              <FlexBox di="column" ai="center">
+                <Category />
+                <BigSearchBar />
+              </FlexBox>
+            ) : (
+              <MiniSearchBar />
+            )}
+          </Container>
+          <UserInfo />
+        </FlexBox>
+      </Container>
+    </Box>
   );
 }

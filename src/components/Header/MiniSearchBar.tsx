@@ -17,6 +17,7 @@ export default function MiniSearchBar() {
     <FlexBox
       component="article"
       sx={{
+        backgroundColor: color.white,
         width: '18.75rem',
         height: '3rem',
         margin: '0 auto',
