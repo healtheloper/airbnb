@@ -18,11 +18,8 @@ module.exports = {
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@common': path.resolve(__dirname, 'src/common'),
       '@constants': path.resolve(__dirname, 'src/constants'),
-<<<<<<< HEAD
       '@assets': path.resolve(__dirname, 'src/assets'),
-=======
       '@mocks': path.resolve(__dirname, 'src/mocks'),
->>>>>>> 1456b344996e14f2a25ec63787d1c369c361d820
     },
   },
   module: {
