@@ -20,7 +20,8 @@
       "@constants/*": ["src/constants/*"],
       "@assets/*": ["src/assets/*"],
       "@mocks/*": ["src/mocks/*"],
-      "@contexts/*": ["src/contexts/*"]
+      "@contexts/*": ["src/contexts/*"],
+      "@hooks/*": ["src/hooks/*"]
     }
   },
   "include": ["src"],
