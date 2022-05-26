@@ -17,6 +17,10 @@ function MyGlobalStyles() {
           color: color.grey1,
           height: '100vh',
         },
+        ul: {
+          listStyle: 'none',
+          paddingLeft: 0,
+        },
       }}
     />
   );

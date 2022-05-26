@@ -8,12 +8,14 @@ declare module '@mui/material/styles' {
   interface TypographyVariants {
     input1: React.CSSProperties;
     input2: React.CSSProperties;
+    footer1: React.CSSProperties;
   }
 
   // allow configuration using `createTheme`
   interface TypographyVariantsOptions {
     input1?: React.CSSProperties;
     input2?: React.CSSProperties;
+    footer1?: React.CSSProperties;
   }
 }
 
@@ -22,6 +24,7 @@ declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     input1: true;
     input2: true;
+    footer1: true;
   }
 }
 
@@ -45,6 +48,11 @@ export const theme = createTheme({
     input2: {
       color: color.grey3,
       fontSize: fontSize.fontSmall,
+    },
+    footer1: {
+      color: color.grey1,
+      fontSize: fontSize.fontDefault,
+      fontWeight: 400,
     },
   },
   components: {
