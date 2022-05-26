@@ -1,5 +1,6 @@
 import { Box, Typography, Grid } from '@mui/material';
 
+import Background from '@components/Background';
 import FlexBox from '@components/FlexBox';
 
 const nearByData = [
@@ -90,58 +91,61 @@ const anywhereData = [
 
 export default function MainPage() {
   return (
-    <Box sx={{ width: '90rem', margin: '0 auto', padding: '5rem' }}>
-      <Box>
-        <Typography variant="h4">가까운 여행지 둘러보기</Typography>
+    <>
+      <Background />
+      <Box sx={{ width: '90rem', margin: '0 auto', padding: '5rem' }}>
+        <Box>
+          <Typography variant="h4">가까운 여행지 둘러보기</Typography>
 
-        <Grid container spacing={3} sx={{ padding: '2rem 0' }}>
-          {nearByData.map(data => (
-            <Grid item lg={3} md={4} sm={6} xs={12} key={data.uuid}>
-              <FlexBox>
-                <Box
-                  sx={{
-                    height: '5rem',
-                    width: '5rem',
-                    borderRadius: '0.625rem',
-                  }}
-                  component="img"
-                  alt="image"
-                  src={data.image}
-                />
-                <FlexBox di="column" jc="center" sx={{ marginLeft: '1rem' }}>
-                  <Typography>{data.city}</Typography>
-                  <Typography>{data.routeDesc}</Typography>
+          <Grid container spacing={3} sx={{ padding: '2rem 0' }}>
+            {nearByData.map(data => (
+              <Grid item lg={3} md={4} sm={6} xs={12} key={data.uuid}>
+                <FlexBox>
+                  <Box
+                    sx={{
+                      height: '5rem',
+                      width: '5rem',
+                      borderRadius: '0.625rem',
+                    }}
+                    component="img"
+                    alt="image"
+                    src={data.image}
+                  />
+                  <FlexBox di="column" jc="center" sx={{ marginLeft: '1rem' }}>
+                    <Typography>{data.city}</Typography>
+                    <Typography>{data.routeDesc}</Typography>
+                  </FlexBox>
                 </FlexBox>
-              </FlexBox>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
-      <Box>
-        <Typography variant="h4">어디서나, 여행은 살아보는 거야!</Typography>
+        <Box>
+          <Typography variant="h4">어디서나, 여행은 살아보는 거야!</Typography>
 
-        <Grid container spacing={2} sx={{ padding: '2rem 0' }}>
-          {anywhereData.map(data => (
-            <Grid item lg={3} md={4} sm={6} xs={12} key={data.uuid}>
-              <FlexBox di="column">
-                <Box
-                  sx={{
-                    height: '19.25rem',
-                    width: '19.25rem',
-                    borderRadius: '0.625rem',
-                    marginBottom: '1rem',
-                  }}
-                  component="img"
-                  alt="image"
-                  src={data.image}
-                />
-                <Typography>{data.description}</Typography>
-              </FlexBox>
-            </Grid>
-          ))}
-        </Grid>
+          <Grid container spacing={2} sx={{ padding: '2rem 0' }}>
+            {anywhereData.map(data => (
+              <Grid item lg={3} md={4} sm={6} xs={12} key={data.uuid}>
+                <FlexBox di="column">
+                  <Box
+                    sx={{
+                      height: '19.25rem',
+                      width: '19.25rem',
+                      borderRadius: '0.625rem',
+                      marginBottom: '1rem',
+                    }}
+                    component="img"
+                    alt="image"
+                    src={data.image}
+                  />
+                  <Typography>{data.description}</Typography>
+                </FlexBox>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }

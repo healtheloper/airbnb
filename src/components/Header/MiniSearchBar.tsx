@@ -4,14 +4,15 @@ import { Typography, Divider } from '@mui/material';
 import FlexBox from '@components/FlexBox';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
+import { useHeaderDispatch } from '@contexts/HeaderProvider';
 
-interface MiniSearchBarProps {
-  handleSearchBarOnClick: () => void;
-}
+export default function MiniSearchBar() {
+  const headerDispatch = useHeaderDispatch();
 
-export default function MiniSearchBar({
-  handleSearchBarOnClick,
-}: MiniSearchBarProps) {
+  const handleClickMiniSearchBar = () => {
+    headerDispatch({ type: 'TOGGLE_FOCUS' });
+  };
+
   return (
     <FlexBox
       component="article"
@@ -32,7 +33,7 @@ export default function MiniSearchBar({
       }}
       jc="center"
       ai="center"
-      onClick={handleSearchBarOnClick}
+      onClick={handleClickMiniSearchBar}
     >
       <Typography variant="input2">일정 입력</Typography>
       <Divider orientation="vertical" flexItem />

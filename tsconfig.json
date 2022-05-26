@@ -19,7 +19,8 @@
       "@common/*": ["src/common/*"],
       "@constants/*": ["src/constants/*"],
       "@assets/*": ["src/assets/*"],
-      "@mocks/*": ["src/mocks/*"]
+      "@mocks/*": ["src/mocks/*"],
+      "@contexts/*": ["src/contexts/*"]
     }
   },
   "include": ["src"],
