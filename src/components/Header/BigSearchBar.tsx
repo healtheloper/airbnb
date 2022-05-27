@@ -5,8 +5,12 @@ import { fadeIn } from '@common/keyframes';
 import FlexBox from '@components/FlexBox';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
+import { useHeaderState } from '@contexts/HeaderProvider';
 
 export default function BigSearchBar() {
+  const { menuType } = useHeaderState();
+  console.log(menuType);
+
   return (
     <FlexBox
       component="article"

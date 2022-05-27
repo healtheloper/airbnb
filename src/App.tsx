@@ -21,6 +21,13 @@ function MyGlobalStyles() {
           listStyle: 'none',
           paddingLeft: 0,
         },
+        button: {
+          margin: 0,
+          padding: 0,
+          border: 'none',
+          backgroundColor: 'transparent',
+          cursor: 'pointer',
+        },
       }}
     />
   );

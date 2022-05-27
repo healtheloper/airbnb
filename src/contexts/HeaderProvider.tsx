@@ -1,10 +1,15 @@
 import React, { useReducer, useContext, createContext, Dispatch } from 'react';
 
+import { MenuType } from '@components/Header/MiniSearchBar/Menu';
+
 type State = {
+  menuType: MenuType;
   isFocus: boolean;
 };
 
-type Action = { type: 'TOGGLE_FOCUS' } | { type: 'BODY_CLICK' };
+type Action =
+  | { type: 'TOGGLE_FOCUS'; menuType: MenuType }
+  | { type: 'BODY_CLICK' };
 
 type HeaderDispatch = Dispatch<Action>;
 
@@ -15,10 +20,12 @@ function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'TOGGLE_FOCUS':
       return {
+        menuType: action.menuType,
         isFocus: !state.isFocus,
       };
     case 'BODY_CLICK':
       return {
+        menuType: 'none',
         isFocus: false,
       };
     default:
@@ -29,6 +36,7 @@ function reducer(state: State, action: Action): State {
 export function HeaderProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, {
     isFocus: false,
+    menuType: 'none',
   });
 
   return (

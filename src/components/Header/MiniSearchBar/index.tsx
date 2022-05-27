@@ -4,15 +4,8 @@ import FlexBox from '@components/FlexBox';
 import Menus from '@components/Header/MiniSearchBar/Menus';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
-import { useHeaderDispatch } from '@contexts/HeaderProvider';
 
 export default function MiniSearchBar() {
-  const headerDispatch = useHeaderDispatch();
-
-  const handleClickMiniSearchBar = () => {
-    headerDispatch({ type: 'TOGGLE_FOCUS' });
-  };
-
   return (
     <FlexBox
       component="article"
@@ -34,7 +27,6 @@ export default function MiniSearchBar() {
       }}
       jc="center"
       ai="center"
-      onClick={handleClickMiniSearchBar}
     >
       <Menus />
       <FlexBox
