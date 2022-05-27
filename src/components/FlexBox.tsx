@@ -4,7 +4,7 @@ import React from 'react';
 interface FlexBoxProps {
   jc?: string;
   ai?: string;
-  di?: string;
+  fd?: string;
   children: React.ReactNode;
   component?: React.ElementType;
   sx?: object;
@@ -14,7 +14,7 @@ interface FlexBoxProps {
 export default function FlexBox({
   jc,
   ai,
-  di,
+  fd,
   children,
   component,
   sx,
@@ -28,7 +28,7 @@ export default function FlexBox({
         display: 'flex',
         ...(jc ? { justifyContent: jc } : {}),
         ...(ai ? { alignItems: ai } : {}),
-        ...(di ? { flexDirection: di } : {}),
+        ...(fd ? { flexDirection: fd } : {}),
       }}
       onClick={onClick}
     >

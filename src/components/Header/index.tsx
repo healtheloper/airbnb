@@ -65,7 +65,7 @@ export default function Header() {
         <Logo />
         <Box>
           {isFocus ? (
-            <FlexBox di="column" ai="center">
+            <FlexBox fd="column" ai="center">
               <Category />
               <BigSearchBar />
             </FlexBox>
