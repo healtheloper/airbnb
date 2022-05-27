@@ -15,12 +15,12 @@ export default function FooterBottom() {
     <FlexBox component="ul" sx={{ gap: 3, mt: 4 }}>
       <Copyright />
       {footerNav.map(nav => (
-        <>
+        <FlexBox key={nav} sx={{ gap: '1rem' }}>
           <Divider orientation="vertical" flexItem />
-          <li key={nav}>
+          <li>
             <Typography>{nav}</Typography>
           </li>
-        </>
+        </FlexBox>
       ))}
     </FlexBox>
   );
