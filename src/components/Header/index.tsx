@@ -8,10 +8,19 @@ import Logo from '@components/Header/Logo';
 import MiniSearchBar from '@components/Header/MiniSearchBar';
 import UserInfo from '@components/Header/UserInfo';
 import color from '@constants/color';
-import { useHeaderState } from '@contexts/HeaderProvider';
+import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
+import { useScroll } from '@hooks/useScroll';
 
 export default function Header() {
+  const headerDispatch = useHeaderDispatch();
   const { isFocus } = useHeaderState();
+  const { scrollY } = useScroll();
+
+  useEffect(() => {
+    if (isFocus) {
+      headerDispatch({ type: 'BODY_CLICK' });
+    }
+  }, [scrollY]);
 
   useEffect(() => {
     if (isFocus) {
