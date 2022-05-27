@@ -53,7 +53,7 @@ export default function Header() {
           <Logo />
           <Container maxWidth={isFocus ? 'md' : 'sm'} sx={{ mx: 0 }}>
             {isFocus ? (
-              <FlexBox di="column" ai="center">
+              <FlexBox fd="column" ai="center">
                 <Category />
                 <BigSearchBar />
               </FlexBox>

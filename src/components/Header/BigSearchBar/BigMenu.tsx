@@ -29,7 +29,7 @@ export default function BigMenu({
       }}
     >
       <FlexBox
-        di="column"
+        fd="column"
         ai="flex-start"
         jc="center"
         sx={{

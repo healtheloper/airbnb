@@ -9,6 +9,7 @@ export default function Background() {
         height: '40rem',
         background: `url(${bgImage}) no-repeat center center`,
         backgroundSize: '90rem 40rem',
+        marginBottom: '5rem',
       }}
     />
   );
