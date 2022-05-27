@@ -1,7 +1,7 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Typography, Divider } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
+import Menus from '@components/Header/MiniSearchBar/Menus';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
 import { useHeaderDispatch } from '@contexts/HeaderProvider';
@@ -36,11 +36,7 @@ export default function MiniSearchBar() {
       ai="center"
       onClick={handleClickMiniSearchBar}
     >
-      <Typography variant="input2">일정 입력</Typography>
-      <Divider orientation="vertical" flexItem />
-      <Typography variant="input2">금액대 입력</Typography>
-      <Divider orientation="vertical" flexItem />
-      <Typography variant="input2">인원 입력</Typography>
+      <Menus />
       <FlexBox
         component="div"
         sx={{

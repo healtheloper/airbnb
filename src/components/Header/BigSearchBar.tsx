@@ -23,16 +23,15 @@ export default function BigSearchBar() {
       }}
       ai="center"
     >
-      <FlexBox sx={{ width: '40%' }}>
-        <Box sx={{ padding: '0 1.5rem' }}>
-          <Typography variant="h6">체크인</Typography>
-          <Typography variant="input1">날짜 입력</Typography>
-        </Box>
-        <Box sx={{ padding: '0 1.5rem' }}>
-          <Typography variant="h6">체크아웃</Typography>
-          <Typography variant="input1">날짜 입력</Typography>
-        </Box>
-      </FlexBox>
+      <Box sx={{ padding: '0 1.5rem', width: '20%' }}>
+        <Typography variant="h6">체크인</Typography>
+        <Typography variant="input1">날짜 입력</Typography>
+      </Box>
+      <Divider orientation="vertical" flexItem />
+      <Box sx={{ padding: '0 1.5rem', width: '20%' }}>
+        <Typography variant="h6">체크아웃</Typography>
+        <Typography variant="input1">날짜 입력</Typography>
+      </Box>
       <Divider orientation="vertical" flexItem />
       <Box sx={{ padding: '0 1.5rem', width: '30%' }}>
         <Typography variant="h6">요금</Typography>
