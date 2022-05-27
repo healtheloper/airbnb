@@ -16,8 +16,6 @@ export default function AnyWhereBox() {
             <FlexBox fd="column">
               <Box
                 sx={{
-                  height: '19.25rem',
-                  width: '19.25rem',
                   borderRadius: '0.625rem',
                 }}
                 component="img"

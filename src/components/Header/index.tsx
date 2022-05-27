@@ -47,6 +47,7 @@ export default function Header() {
         <FlexBox
           sx={{
             transition: 'height .2s ease',
+            px: '3rem',
           }}
           jc="space-between"
         >
