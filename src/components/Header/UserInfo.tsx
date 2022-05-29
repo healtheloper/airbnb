@@ -26,6 +26,7 @@ export default function UserInfo() {
         open={open}
         onClose={handleClose}
         TransitionComponent={Fade}
+        disableScrollLock
         PaperProps={{
           sx: {
             marginTop: '0.625rem',

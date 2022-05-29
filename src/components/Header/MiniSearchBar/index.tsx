@@ -1,29 +1,24 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Typography, Divider } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
+import Menus from '@components/Header/MiniSearchBar/Menus';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
 
-interface MiniSearchBarProps {
-  handleSearchBarOnClick: () => void;
-}
-
-export default function MiniSearchBar({
-  handleSearchBarOnClick,
-}: MiniSearchBarProps) {
+export default function MiniSearchBar() {
   return (
     <FlexBox
       component="article"
       sx={{
+        backgroundColor: color.white,
         width: '18.75rem',
         height: '3rem',
+        margin: '0 auto',
         padding: '1rem 0.5rem',
         borderRadius: '2rem',
         gap: '1rem',
         border: 1,
         borderColor: color.grey4,
-        boxSizing: 'border-box',
         cursor: 'pointer',
         '&:hover': {
           boxShadow:
@@ -32,13 +27,8 @@ export default function MiniSearchBar({
       }}
       jc="center"
       ai="center"
-      onClick={handleSearchBarOnClick}
     >
-      <Typography variant="input2">일정 입력</Typography>
-      <Divider orientation="vertical" flexItem />
-      <Typography variant="input2">금액대 입력</Typography>
-      <Divider orientation="vertical" flexItem />
-      <Typography variant="input2">인원 입력</Typography>
+      <Menus />
       <FlexBox
         component="div"
         sx={{

@@ -12,11 +12,16 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "outDir": "./dist",
+    "typeRoots": ["src/types"],
     "paths": {
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],
       "@common/*": ["src/common/*"],
-      "@constants/*": ["src/constants/*"]
+      "@constants/*": ["src/constants/*"],
+      "@assets/*": ["src/assets/*"],
+      "@mocks/*": ["src/mocks/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@hooks/*": ["src/hooks/*"]
     }
   },
   "include": ["src"],

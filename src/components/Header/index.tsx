@@ -1,5 +1,5 @@
-import { Container, Box } from '@mui/material';
-import { useState, useEffect, useCallback } from 'react';
+import { Box, Container } from '@mui/material';
+import { useEffect } from 'react';
 
 import FlexBox from '@components/FlexBox';
 import BigSearchBar from '@components/Header/BigSearchBar';
@@ -8,24 +8,19 @@ import Logo from '@components/Header/Logo';
 import MiniSearchBar from '@components/Header/MiniSearchBar';
 import UserInfo from '@components/Header/UserInfo';
 import color from '@constants/color';
+import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
+import { useScroll } from '@hooks/useScroll';
 
 export default function Header() {
-  const [isFocus, setIsFocus] = useState(false);
+  const headerDispatch = useHeaderDispatch();
+  const { isFocus } = useHeaderState();
+  const { scrollY } = useScroll();
 
-  const handleSearchBarOnClick = () => {
-    setIsFocus(!isFocus);
-  };
-
-  const closeBigSearchBar = useCallback(
-    (e: MouseEvent) => {
-      if (isFocus) {
-        // e.target이 헤더 이외일때 setIsFocus(false)
-        const target = e.target as HTMLInputElement;
-        if (target.tagName === 'BODY') setIsFocus(false);
-      }
-    },
-    [isFocus],
-  );
+  useEffect(() => {
+    if (isFocus) {
+      headerDispatch({ type: 'BODY_CLICK' });
+    }
+  }, [scrollY]);
 
   useEffect(() => {
     if (isFocus) {
@@ -35,37 +30,41 @@ export default function Header() {
     }
   }, [isFocus]);
 
-  useEffect(() => {
-    document.body.addEventListener('click', closeBigSearchBar);
-
-    return () => {
-      document.body.removeEventListener('click', closeBigSearchBar);
-    };
-  }, [closeBigSearchBar]);
-
   return (
-    <FlexBox
+    <Box
       component="header"
       sx={{
-        backgroundColor: color.white,
         height: isFocus ? '11.875rem' : '5.875rem',
         padding: '1.5rem 2rem',
-        transition: 'height .2s ease',
+        position: 'fixed',
+        margin: '0 auto',
+        top: 0,
+        left: 0,
+        right: 0,
       }}
-      jc="space-between"
     >
-      <Logo />
-      <Container maxWidth="sm">
-        {isFocus ? (
-          <Box>
-            <Category />
-            <BigSearchBar />
-          </Box>
-        ) : (
-          <MiniSearchBar handleSearchBarOnClick={handleSearchBarOnClick} />
-        )}
+      <Container maxWidth="lg">
+        <FlexBox
+          sx={{
+            transition: 'height .2s ease',
+            px: '3rem',
+          }}
+          jc="space-between"
+        >
+          <Logo />
+          <Container maxWidth={isFocus ? 'md' : 'sm'} sx={{ mx: 0 }}>
+            {isFocus ? (
+              <FlexBox fd="column" ai="center">
+                <Category />
+                <BigSearchBar />
+              </FlexBox>
+            ) : (
+              <MiniSearchBar />
+            )}
+          </Container>
+          <UserInfo />
+        </FlexBox>
       </Container>
-      <UserInfo />
-    </FlexBox>
+    </Box>
   );
 }
