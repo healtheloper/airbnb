@@ -1,4 +1,4 @@
-import debounce from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 import { useState, useEffect } from 'react';
 
 export function useScroll() {
@@ -8,10 +8,10 @@ export function useScroll() {
     setScrollY(window.pageYOffset);
   };
 
-  const delay = 100;
+  const delay = 500;
 
   useEffect(() => {
-    window.addEventListener('scroll', debounce(listener, delay));
+    window.addEventListener('scroll', throttle(listener, delay));
     return () => window.removeEventListener('scroll', listener);
   }, []);
 
