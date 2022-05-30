@@ -58,8 +58,7 @@ function CardBody({ today }) {
   );
 }
 
-export default function MonthCard() {
-  const today = new Date();
+export default function MonthCard({ today }) {
   return (
     <CardWrapper>
       <CardTitle today={today} />

@@ -4,6 +4,8 @@ import widths from '@constants/widths';
 
 import MonthCard from './MonthCard';
 
+const CARD_LENGTH = 4;
+
 const CardsWrapper = styled.div`
   transform: translateX(-${widths.monthCards.percent}%);
   display: flex;
@@ -12,12 +14,14 @@ const CardsWrapper = styled.div`
 `;
 
 export default function MonthCards() {
+  const today = new Date();
+  const curYear = today.getFullYear();
+  const curMonth = today.getMonth();
   return (
     <CardsWrapper>
-      <MonthCard />
-      <MonthCard />
-      <MonthCard />
-      <MonthCard />
+      {new Array(CARD_LENGTH).fill(0).map((_, i) => (
+        <MonthCard today={new Date(curYear, curMonth - 1 + i)} />
+      ))}
     </CardsWrapper>
   );
 }
