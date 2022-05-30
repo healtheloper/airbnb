@@ -3,7 +3,7 @@ import { Divider, Typography } from '@mui/material';
 import FlexBox from '@components/FlexBox';
 import Copyright from '@components/Footer/Copyright';
 
-const footerNav = [
+const corpItems = [
   '개인정보처리방침',
   '이용약관',
   '한국의 변경된 환불 정책',
@@ -14,11 +14,11 @@ export default function FooterBottom() {
   return (
     <FlexBox component="ul" sx={{ gap: 3, mt: 4 }}>
       <Copyright />
-      {footerNav.map(nav => (
-        <FlexBox key={nav} sx={{ gap: '1rem' }}>
+      {corpItems.map(corpItem => (
+        <FlexBox key={corpItem} sx={{ gap: '1rem' }}>
           <Divider orientation="vertical" flexItem />
           <li>
-            <Typography>{nav}</Typography>
+            <Typography>{corpItem}</Typography>
           </li>
         </FlexBox>
       ))}

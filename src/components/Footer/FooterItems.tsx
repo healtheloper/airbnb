@@ -2,17 +2,17 @@ import { Grid, Typography } from '@mui/material';
 
 import footerData from '@mocks/footer';
 
-const { data } = footerData;
+const { data: footerItems } = footerData;
 
 export default function FooterItems() {
   return (
     <Grid container columnSpacing={2}>
-      {data.map(item => (
-        <Grid key={item.mainTitle} item xs={3}>
+      {footerItems.map(({ mainTitle, subTitles }) => (
+        <Grid key={mainTitle} item xs={3}>
           <Typography component="h6" variant="footer1" sx={{ fontWeight: 900 }}>
-            {item.mainTitle}
+            {mainTitle}
           </Typography>
-          {item.subs.map(subItem => (
+          {subTitles.map(subItem => (
             <Typography
               key={subItem.title}
               component="p"

@@ -2,7 +2,7 @@ const footer = {
   data: [
     {
       mainTitle: '소개',
-      subs: [
+      subTitles: [
         {
           title: '이용방법',
         },
@@ -31,7 +31,7 @@ const footer = {
     },
     {
       mainTitle: '커뮤니티',
-      subs: [
+      subTitles: [
         {
           title: '다양성 및 소속감',
         },
@@ -51,7 +51,7 @@ const footer = {
     },
     {
       mainTitle: '호스팅하기',
-      subs: [
+      subTitles: [
         {
           title: '호스팅하기',
         },
@@ -80,7 +80,7 @@ const footer = {
     },
     {
       mainTitle: '지원',
-      subs: [
+      subTitles: [
         {
           title: '코로나19 대응',
         },
