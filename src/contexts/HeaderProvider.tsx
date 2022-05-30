@@ -13,6 +13,11 @@ type Action =
 
 type HeaderDispatch = Dispatch<Action>;
 
+const initHeaderState: State = {
+  menuType: 'none',
+  isFocus: false,
+};
+
 const HeaderStateContext = createContext<State | null>(null);
 const HeaderDispatchContext = createContext<HeaderDispatch | null>(null);
 
@@ -24,20 +29,14 @@ function reducer(state: State, action: Action): State {
         isFocus: !state.isFocus,
       };
     case 'BODY_CLICK':
-      return {
-        menuType: 'none',
-        isFocus: false,
-      };
+      return { ...initHeaderState };
     default:
       throw new Error('Unhandled action');
   }
 }
 
 export function HeaderProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, {
-    isFocus: false,
-    menuType: 'none',
-  });
+  const [state, dispatch] = useReducer(reducer, initHeaderState);
 
   return (
     <HeaderStateContext.Provider value={state}>
