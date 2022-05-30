@@ -14,9 +14,10 @@ type Action =
 
 type HeaderDispatch = Dispatch<Action>;
 
+// TODO: 캘린더 구현 끝나고 수정하기
 const initHeaderState: HeaderState = {
-  menuType: 'none',
-  isFocus: false,
+  menuType: 'checkin',
+  isFocus: true,
 };
 
 const HeaderStateContext = createContext<HeaderState | null>(null);
