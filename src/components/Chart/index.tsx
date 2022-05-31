@@ -63,7 +63,7 @@ const draw = (
   priceObj: cavansDataProps,
 ) => {
   const ctx = canvas?.getContext('2d');
-  console.log(min, max);
+
   if (ctx) {
     ctx.beginPath();
     ctx.moveTo(0, CANVAS_HEIGHT);
@@ -120,18 +120,22 @@ const calculateRangeCount = () => {
   }, {});
 };
 
-const getAveragePrice = (min: number, max: number) =>
+const getAveragePrice = (min: number, max: number) => {
   // min, max 를 받아서 그 안의 값만 평균구하기
-  Math.floor(
-    rooms.data
-      .map(room => room.price)
-      .reduce((prev, curr) => {
-        if (curr >= min && curr <= max) {
-          return prev + curr;
-        }
-        return prev;
-      }, 0) / rooms.data.length,
-  );
+  let idx = 0;
+  const sumData = rooms.data
+    .map(room => room.price)
+    .reduce((prev, curr) => {
+      if (curr >= min && curr <= max) {
+        idx += 1;
+        return prev + curr;
+      }
+      return prev;
+    }, 0);
+
+  return sumData === 0 ? 0 : Math.floor(sumData / idx);
+};
+
 export default function Chart() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [price, setPrice] = useState({
@@ -149,22 +153,24 @@ export default function Chart() {
       return;
     }
 
-    let min = 0;
-    let max = 0;
     if (activeThumb === 0) {
-      [min, max] = [
+      setSliderValue([
         Math.min(newValue[0], sliderValue[1] - 10000),
         sliderValue[1],
-      ];
+      ]);
     } else {
-      [min, max] = [
+      setSliderValue([
         sliderValue[0],
         Math.max(newValue[1], sliderValue[0] + 10000),
-      ];
+      ]);
     }
 
-    setSliderValue([min, max]);
-    draw(canvasRef.current, min, max, calculateRangeCount());
+    draw(
+      canvasRef.current,
+      sliderValue[0],
+      sliderValue[1],
+      calculateRangeCount(),
+    );
   };
 
   useEffect(() => {
@@ -201,7 +207,8 @@ export default function Chart() {
         </Typography>
         <Typography variant="input2">
           평균 1박 요금은 ₩
-          {getAveragePrice(price.min, price.max).toLocaleString()}입니다.
+          {getAveragePrice(sliderValue[0], sliderValue[1]).toLocaleString()}
+          입니다.
         </Typography>
       </Box>
 
