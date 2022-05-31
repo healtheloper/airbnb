@@ -28,6 +28,9 @@ function MyGlobalStyles() {
           backgroundColor: 'transparent',
           cursor: 'pointer',
         },
+        h5: {
+          margin: 0,
+        },
       }}
     />
   );
