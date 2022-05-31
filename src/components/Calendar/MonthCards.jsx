@@ -1,26 +1,33 @@
 import styled from '@emotion/styled';
 
-import widths from '@constants/widths';
-
 import MonthCard from './MonthCard';
 
 const CARD_LENGTH = 4;
 
 const CardsWrapper = styled.div`
-  transform: translateX(-${widths.monthCards.percent}%);
+  transform: translateX(${({ translateX }) => translateX}%);
   display: flex;
   width: 400%;
   height: 100%;
+  ${({ isTransitioning }) => isTransitioning && 'transition: transform 0.2s'}
 `;
 
-export default function MonthCards() {
-  const today = new Date();
+export default function MonthCards({
+  today,
+  focusMonth,
+  translateX,
+  isTransitioning,
+  onCardsTransitionEnd,
+}) {
   const curYear = today.getFullYear();
-  const curMonth = today.getMonth();
   return (
-    <CardsWrapper>
+    <CardsWrapper
+      onTransitionEnd={onCardsTransitionEnd}
+      translateX={translateX}
+      isTransitioning={isTransitioning}
+    >
       {new Array(CARD_LENGTH).fill(0).map((_, i) => (
-        <MonthCard today={new Date(curYear, curMonth - 1 + i)} />
+        <MonthCard today={new Date(curYear, focusMonth - 1 + i)} />
       ))}
     </CardsWrapper>
   );
