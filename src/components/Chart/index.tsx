@@ -11,7 +11,7 @@ const CANVAS_WIDTH = 400;
 const CANVAS_HEIGHT = 100;
 const normalDistributionValue = 100000;
 
-interface AirbnbThumbComponentProps extends React.HTMLAttributes<unknown> {}
+type AirbnbThumbComponentProps = React.HTMLAttributes<unknown>;
 
 function AirbnbThumbComponent(props: AirbnbThumbComponentProps) {
   const { children, ...other } = props;
@@ -59,7 +59,6 @@ interface roomsProps {
 const draw = (canvas: HTMLCanvasElement | null, priceObj: cavansDataProps) => {
   const ctx = canvas?.getContext('2d');
 
-  console.table(priceObj);
   if (ctx) {
     ctx.beginPath();
     ctx.moveTo(0, 100);
