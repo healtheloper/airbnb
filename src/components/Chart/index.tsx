@@ -56,30 +56,36 @@ interface roomsProps {
   stars: number;
 }
 
-const draw = (canvas: HTMLCanvasElement | null, priceObj: cavansDataProps) => {
+const draw = (
+  canvas: HTMLCanvasElement | null,
+  min: number,
+  max: number,
+  priceObj: cavansDataProps,
+) => {
   const ctx = canvas?.getContext('2d');
-
+  console.log(min, max);
   if (ctx) {
     ctx.beginPath();
-    ctx.moveTo(0, 100);
+    ctx.moveTo(0, CANVAS_HEIGHT);
 
-    const strokeRange = Math.floor(CANVAS_WIDTH / 10);
+    const priceObjLength = Object.keys(priceObj).length;
+    const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength);
+    const maxPrice = Math.max(...Object.values(priceObj));
 
-    for (let i = 0; i < Object.keys(priceObj).length; i += 1) {
-      // priceObj의 key, value로 차트 그려주기
-      // ctx.quadraticCurveTo(strokeRange, , strokeRange + strokeRange, );
-    }
+    let prevData = 0;
 
-    ctx.quadraticCurveTo(40, 85, 80, 30); // 100000 ~ 200000
-    ctx.quadraticCurveTo(80, 80, 120, 5); // 200000 ~ 300000
-    ctx.quadraticCurveTo(120, 40, 160, 50); // 300000 ~ 400000
-    ctx.quadraticCurveTo(160, 120, 200, 85); // 400000 ~ 500000
-    ctx.quadraticCurveTo(200, 80, 240, 100); // 500000 ~ 600000
+    Object.values(priceObj).forEach((data, index) => {
+      const x = xInterval * (index + 1);
+      const prevX = xInterval * index;
+      const controlPoint = (x + prevX) / 2;
+      const y = CANVAS_HEIGHT - (data / maxPrice) * 100;
+      const prevY = CANVAS_HEIGHT - (prevData / maxPrice) * 100;
+      ctx.bezierCurveTo(controlPoint, prevY, controlPoint, y, x, y);
+      prevData = data;
+    });
 
+    ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.fillStyle = color.bgColor;
-    ctx.strokeStyle = color.bgColor;
-
-    ctx.stroke();
     ctx.fill();
     ctx.closePath();
   }
@@ -93,8 +99,11 @@ const getPriceMinMax = (data: roomsProps[]) => {
   return [min.price, max.price];
 };
 
-const parsingPrice = (data: number[]) => {
-  data.sort((a, b) => a - b).filter(n => n !== 0);
+const calculateRangeCount = () => {
+  const data = rooms.data
+    .map(room => room.price)
+    .sort((a, b) => a - b)
+    .filter(n => n !== 0);
   let standard = normalDistributionValue;
 
   return data.reduce((prev: cavansDataProps, cur: number) => {
@@ -111,6 +120,18 @@ const parsingPrice = (data: number[]) => {
   }, {});
 };
 
+const getAveragePrice = (min: number, max: number) =>
+  // min, max 를 받아서 그 안의 값만 평균구하기
+  Math.floor(
+    rooms.data
+      .map(room => room.price)
+      .reduce((prev, curr) => {
+        if (curr >= min && curr <= max) {
+          return prev + curr;
+        }
+        return prev;
+      }, 0) / rooms.data.length,
+  );
 export default function Chart() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [price, setPrice] = useState({
@@ -118,10 +139,6 @@ export default function Chart() {
     max: 0,
   });
   const [sliderValue, setSliderValue] = useState<number[]>([0, 100]);
-  const averagePrice = Math.floor(
-    rooms.data.map(room => room.price).reduce((prev, curr) => prev + curr, 0) /
-      rooms.data.length,
-  );
 
   const handleSlider = (
     event: Event,
@@ -132,17 +149,22 @@ export default function Chart() {
       return;
     }
 
+    let min = 0;
+    let max = 0;
     if (activeThumb === 0) {
-      setSliderValue([
-        Math.min(newValue[0], sliderValue[1] - 5),
+      [min, max] = [
+        Math.min(newValue[0], sliderValue[1] - 10000),
         sliderValue[1],
-      ]);
+      ];
     } else {
-      setSliderValue([
+      [min, max] = [
         sliderValue[0],
-        Math.max(newValue[1], sliderValue[0] + 5),
-      ]);
+        Math.max(newValue[1], sliderValue[0] + 10000),
+      ];
     }
+
+    setSliderValue([min, max]);
+    draw(canvasRef.current, min, max, calculateRangeCount());
   };
 
   useEffect(() => {
@@ -152,12 +174,10 @@ export default function Chart() {
       canvas.height = CANVAS_HEIGHT;
 
       const [min, max] = getPriceMinMax(rooms.data);
+      setSliderValue([min, max]);
       setPrice({ min, max });
 
-      const priceArray = rooms.data.map(room => room.price);
-      const newPriceObj = parsingPrice(priceArray);
-
-      draw(canvas, newPriceObj);
+      draw(canvas, min, max, calculateRangeCount());
     }
   }, []);
 
@@ -176,10 +196,12 @@ export default function Chart() {
       <Typography sx={{ fontWeight: 700 }}>가격 범위</Typography>
       <Box sx={{ margin: '1rem 0 3rem 0' }}>
         <Typography>
-          ₩{price.min.toLocaleString()} ~ ₩{price.max.toLocaleString()}+
+          ₩{sliderValue[0].toLocaleString()} ~ ₩
+          {sliderValue[1].toLocaleString()}+
         </Typography>
         <Typography variant="input2">
-          평균 1박 요금은 ₩{averagePrice.toLocaleString()}입니다.
+          평균 1박 요금은 ₩
+          {getAveragePrice(price.min, price.max).toLocaleString()}입니다.
         </Typography>
       </Box>
 
@@ -190,6 +212,8 @@ export default function Chart() {
           onChange={handleSlider}
           components={{ Thumb: AirbnbThumbComponent }}
           disableSwap
+          min={price.min}
+          max={price.max}
           sx={{
             position: 'absolute',
             padding: 0,
