@@ -3,6 +3,7 @@ import { Fab } from '@mui/material';
 
 import { fadeIn } from '@common/keyframes';
 import Calendar from '@components/Calendar';
+import Chart from '@components/Chart';
 import FlexBox from '@components/FlexBox';
 import BigMenus from '@components/Header/BigSearchBar/BigMenus';
 import Modal from '@components/Header/BigSearchBar/Modal';
@@ -23,7 +24,7 @@ export default function BigSearchBar() {
       case 'persons':
         return <div />;
       case 'price':
-        return <div />;
+        return <Chart />;
       case 'none':
         return <div />;
       default:
