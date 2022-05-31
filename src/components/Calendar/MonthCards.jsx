@@ -14,15 +14,15 @@ const CardsWrapper = styled.div`
 
 export default function MonthCards({
   today,
-  focusMonth,
-  translateX,
-  isTransitioning,
-  onCardsTransitionEnd,
+  calendarState: { focusMonth, translateX, isTransitioning },
+  calendarDispatch,
 }) {
   const curYear = today.getFullYear();
   return (
     <CardsWrapper
-      onTransitionEnd={onCardsTransitionEnd}
+      onTransitionEnd={() => {
+        calendarDispatch({ type: 'CARDS_TRANSITION_END' });
+      }}
       translateX={translateX}
       isTransitioning={isTransitioning}
     >

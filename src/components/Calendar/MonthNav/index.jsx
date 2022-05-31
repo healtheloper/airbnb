@@ -26,12 +26,12 @@ const ArrowWrapper = styled.div`
 
 const TRANSITION_TIME = 200;
 
-export default function MonthNav({ onArrowClick }) {
+export default function MonthNav({ calendarDispatch }) {
   const handleLeftClick = useThrottle(() => {
-    onArrowClick('left');
+    calendarDispatch({ type: 'LEFT_ARROW_CLICK' });
   }, TRANSITION_TIME);
   const handleRightClick = useThrottle(() => {
-    onArrowClick('right');
+    calendarDispatch({ type: 'RIGHT_ARROW_CLICK' });
   }, TRANSITION_TIME);
 
   return (

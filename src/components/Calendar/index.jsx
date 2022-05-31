@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 
 import widths from '@constants/widths';
 
@@ -20,38 +20,58 @@ const MonthCardsWrapper = styled.div`
 
 const initTranslateX = -widths.monthCards.percent;
 
+const reducer = (state, { type }) => {
+  switch (type) {
+    case 'LEFT_ARROW_CLICK':
+      return {
+        ...state,
+        isLeft: true,
+        isTransitioning: true,
+        translateX: state.translateX - widths.monthCards.percent * -1,
+      };
+    case 'RIGHT_ARROW_CLICK':
+      return {
+        ...state,
+        isLeft: false,
+        isTransitioning: true,
+        translateX: state.translateX - widths.monthCards.percent,
+      };
+    case 'CARDS_TRANSITION_END':
+      return {
+        ...state,
+        focusMonth: state.focusMonth + (state.isLeft ? -1 : 1),
+        isTransitioning: false,
+        translateX: initTranslateX,
+      };
+    default:
+      throw Error('Unexpected calendar dispatch type');
+  }
+};
+
 export default function Calendar() {
   const today = new Date();
-  const [focusMonth, setFocusMonth] = useState(today.getMonth());
-  const [translateX, setTranslateX] = useState(initTranslateX);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isLeft, setIsLeft] = useState(false);
 
-  const handleClickArrowBtn = arrowDirection => {
-    const newIsLeft = arrowDirection === 'left';
-    const diff = newIsLeft ? -1 : 1;
-    setIsLeft(newIsLeft);
-    setIsTransitioning(true);
-    setTranslateX(translateX - widths.monthCards.percent * diff);
+  // TODO: today 가  new Date() 로 계속 호출되니까 '일' 을 기준으로 뽑아서 useMemo 하면 안될까?
+  const initCalendarState = {
+    focusMonth: today.getMonth(),
+    translateX: initTranslateX,
+    isTransitioning: false,
+    isLeft: false,
   };
 
-  const handleCardsTransitionEnd = () => {
-    const diff = isLeft ? -1 : 1;
-    setFocusMonth(focusMonth + diff);
-    setIsTransitioning(false);
-    setTranslateX(initTranslateX);
-  };
+  const [calendarState, calendarDispatch] = useReducer(
+    reducer,
+    initCalendarState,
+  );
 
   return (
     <Wrapper>
-      <MonthNav onArrowClick={handleClickArrowBtn} />
+      <MonthNav calendarDispatch={calendarDispatch} />
       <MonthCardsWrapper>
         <MonthCards
-          onCardsTransitionEnd={handleCardsTransitionEnd}
-          isTransitioning={isTransitioning}
-          translateX={translateX}
+          calendarDispatch={calendarDispatch}
+          calendarState={calendarState}
           today={today}
-          focusMonth={focusMonth}
         />
       </MonthCardsWrapper>
     </Wrapper>
