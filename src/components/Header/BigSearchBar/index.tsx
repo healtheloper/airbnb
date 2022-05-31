@@ -4,6 +4,7 @@ import { Fab } from '@mui/material';
 import { fadeIn } from '@common/keyframes';
 import FlexBox from '@components/FlexBox';
 import BigMenus from '@components/Header/BigSearchBar/BigMenus';
+import Modal from '@components/Header/BigSearchBar/Modal';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
 
@@ -12,6 +13,7 @@ export default function BigSearchBar() {
     <FlexBox
       component="article"
       sx={{
+        position: 'relative',
         backgroundColor: color.grey6,
         width: '57.25rem',
         height: '4.75rem',
@@ -37,6 +39,7 @@ export default function BigSearchBar() {
         />
         <span>검색</span>
       </Fab>
+      <Modal />
     </FlexBox>
   );
 }
