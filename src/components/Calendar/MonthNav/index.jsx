@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { throttle } from 'lodash';
+import { useEffect, useRef } from 'react';
 
 import color from '@constants/color';
 
@@ -23,13 +25,34 @@ const ArrowWrapper = styled.div`
   }
 `;
 
+const TRANSITION_TIME = 200;
+const DELAY_SPARE_TIME = 100;
+
 export default function MonthNav({ onArrowClick }) {
+  const leftBtn = useRef();
+  const rightBtn = useRef();
+
+  useEffect(() => {
+    leftBtn.current.addEventListener(
+      'click',
+      throttle(() => {
+        onArrowClick('left');
+      }, TRANSITION_TIME + DELAY_SPARE_TIME),
+    );
+    rightBtn.current.addEventListener(
+      'click',
+      throttle(() => {
+        onArrowClick('right');
+      }, TRANSITION_TIME + DELAY_SPARE_TIME),
+    );
+  }, []);
+
   return (
     <Wrapper>
-      <ArrowWrapper onClick={() => onArrowClick('left')}>
+      <ArrowWrapper ref={leftBtn}>
         <LeftArrow />
       </ArrowWrapper>
-      <ArrowWrapper onClick={() => onArrowClick('right')}>
+      <ArrowWrapper ref={rightBtn}>
         <RightArrow />
       </ArrowWrapper>
     </Wrapper>
