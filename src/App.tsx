@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { theme } from '@common/theme';
+import Chart from '@components/Chart';
 import Layout from '@components/Layout';
 import color from '@constants/color';
 import { HeaderProvider } from '@contexts/HeaderProvider';
@@ -42,7 +43,7 @@ export default function App() {
         <HeaderProvider>
           <Router>
             <Routes>
-              <Route path="/" element={<Layout />}>
+              <Route path="/" element={<Chart />}>
                 <Route index element={<MainPage />} />
               </Route>
             </Routes>
