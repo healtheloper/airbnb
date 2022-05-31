@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 
 import widths from '@constants/widths';
 
