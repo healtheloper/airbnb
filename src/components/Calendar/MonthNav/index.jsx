@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
-import { throttle } from 'lodash';
-import { useEffect, useRef } from 'react';
 
 import color from '@constants/color';
+import useThrottle from '@hooks/useThrottle';
 
 import LeftArrow from './LeftArrow';
 import RightArrow from './RightArrow';
@@ -26,33 +25,21 @@ const ArrowWrapper = styled.div`
 `;
 
 const TRANSITION_TIME = 200;
-const DELAY_SPARE_TIME = 100;
 
 export default function MonthNav({ onArrowClick }) {
-  const leftBtn = useRef();
-  const rightBtn = useRef();
-
-  useEffect(() => {
-    leftBtn.current.addEventListener(
-      'click',
-      throttle(() => {
-        onArrowClick('left');
-      }, TRANSITION_TIME + DELAY_SPARE_TIME),
-    );
-    rightBtn.current.addEventListener(
-      'click',
-      throttle(() => {
-        onArrowClick('right');
-      }, TRANSITION_TIME + DELAY_SPARE_TIME),
-    );
-  }, []);
+  const handleLeftClick = useThrottle(() => {
+    onArrowClick('left');
+  }, TRANSITION_TIME);
+  const handleRightClick = useThrottle(() => {
+    onArrowClick('right');
+  }, TRANSITION_TIME);
 
   return (
     <Wrapper>
-      <ArrowWrapper ref={leftBtn}>
+      <ArrowWrapper onClick={handleLeftClick}>
         <LeftArrow />
       </ArrowWrapper>
-      <ArrowWrapper ref={rightBtn}>
+      <ArrowWrapper onClick={handleRightClick}>
         <RightArrow />
       </ArrowWrapper>
     </Wrapper>
