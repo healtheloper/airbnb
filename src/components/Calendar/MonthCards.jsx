@@ -27,7 +27,10 @@ export default function MonthCards({
       isTransitioning={isTransitioning}
     >
       {new Array(CARD_LENGTH).fill(0).map((_, i) => (
-        <MonthCard today={new Date(curYear, focusMonth - 1 + i)} />
+        <MonthCard
+          today={today}
+          months={new Date(curYear, focusMonth - 1 + i)}
+        />
       ))}
     </CardsWrapper>
   );

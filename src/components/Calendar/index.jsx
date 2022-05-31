@@ -18,8 +18,6 @@ const MonthCardsWrapper = styled.div`
   overflow: hidden;
 `;
 
-// widths.monthCards.percent
-
 const initTranslateX = -widths.monthCards.percent;
 
 export default function Calendar() {
