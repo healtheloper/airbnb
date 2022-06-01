@@ -14,13 +14,19 @@ interface Props {
   menu: IBigMenu;
   width: string;
   isSelectedType: boolean;
+  changeMenuType: (menuType: MenuType) => void;
 }
 
 export default function BigMenu({
-  menu: { title, placeholder },
+  menu: { title, placeholder, menuType },
   width,
   isSelectedType,
+  changeMenuType,
 }: Props) {
+  const handleClickBigMenu = () => {
+    changeMenuType(menuType);
+  };
+
   return (
     <Box
       sx={{
@@ -37,6 +43,7 @@ export default function BigMenu({
           height: '100%',
           width: '100%',
           padding: '0 1.5rem',
+          cursor: 'pointer',
           ...(isSelectedType
             ? {
                 backgroundColor: color.white,
@@ -49,6 +56,7 @@ export default function BigMenu({
                 },
               }),
         }}
+        onClick={handleClickBigMenu}
       >
         <Typography variant="h6">{title}</Typography>
         <Typography variant="input1">{placeholder}</Typography>

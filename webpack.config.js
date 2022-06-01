@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -11,7 +12,7 @@ module.exports = {
     app: path.join(__dirname, 'src', 'index.tsx'),
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       '@': path.resolve(__dirname, 'src/'),
       '@components': path.resolve(__dirname, 'src/components'),

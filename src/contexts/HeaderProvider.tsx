@@ -2,21 +2,27 @@ import React, { useReducer, useContext, createContext, Dispatch } from 'react';
 
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 
-type State = {
+export interface HeaderState {
   menuType: MenuType;
   isFocus: boolean;
-};
+}
 
 type Action =
   | { type: 'TOGGLE_FOCUS'; menuType: MenuType }
+  | { type: 'CHANGE_MENU_TYPE'; menuType: MenuType }
   | { type: 'BODY_CLICK' };
 
 type HeaderDispatch = Dispatch<Action>;
 
-const HeaderStateContext = createContext<State | null>(null);
+const initHeaderState: HeaderState = {
+  menuType: 'none',
+  isFocus: false,
+};
+
+const HeaderStateContext = createContext<HeaderState | null>(null);
 const HeaderDispatchContext = createContext<HeaderDispatch | null>(null);
 
-function reducer(state: State, action: Action): State {
+function reducer(state: HeaderState, action: Action): HeaderState {
   switch (action.type) {
     case 'TOGGLE_FOCUS':
       return {
@@ -24,9 +30,11 @@ function reducer(state: State, action: Action): State {
         isFocus: !state.isFocus,
       };
     case 'BODY_CLICK':
+      return { ...initHeaderState };
+    case 'CHANGE_MENU_TYPE':
       return {
-        menuType: 'none',
-        isFocus: false,
+        ...state,
+        menuType: action.menuType,
       };
     default:
       throw new Error('Unhandled action');
@@ -34,10 +42,7 @@ function reducer(state: State, action: Action): State {
 }
 
 export function HeaderProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, {
-    isFocus: false,
-    menuType: 'none',
-  });
+  const [state, dispatch] = useReducer(reducer, initHeaderState);
 
   return (
     <HeaderStateContext.Provider value={state}>

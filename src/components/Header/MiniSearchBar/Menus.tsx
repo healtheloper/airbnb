@@ -4,7 +4,7 @@ import React from 'react';
 import Menu, { IMenu } from '@components/Header/MiniSearchBar/Menu';
 
 const menus: IMenu[] = [
-  { menuType: 'schedule', title: '일정 입력' },
+  { menuType: 'checkin', title: '일정 입력' },
   { menuType: 'price', title: '금액대 입력' },
   { menuType: 'persons', title: '인원 입력' },
 ];

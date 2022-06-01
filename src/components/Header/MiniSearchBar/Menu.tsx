@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 
 import { useHeaderDispatch } from '@contexts/HeaderProvider';
 
-export type MenuType = 'persons' | 'schedule' | 'price' | 'none';
+export type MenuType = 'persons' | 'checkin' | 'checkout' | 'price' | 'none';
 
 export interface IMenu {
   menuType: MenuType;
