@@ -14,11 +14,6 @@ function reducer(state, action) {
         checkin: action.checkin,
         checkout: '',
       };
-    case 'CHECK_IN_UPDATE':
-      return {
-        ...state,
-        checkin: action.checkin,
-      };
     case 'CHECK_OUT_UPDATE':
       return {
         ...state,
@@ -55,8 +50,8 @@ export default function useCalendar() {
   // TODO: today 가  new Date() 로 계속 호출되니까 '일' 을 기준으로 뽑아서 useMemo 하면 안될까?
   const initState = {
     today,
-    checkin: '123',
-    checkout: '456',
+    checkin: '',
+    checkout: '',
     focusMonth: today.getMonth(),
     translateX: initTranslateX,
     isTransitioning: false,

@@ -12,10 +12,8 @@ const CardsWrapper = styled.div`
   ${({ isTransitioning }) => isTransitioning && 'transition: transform 0.2s'}
 `;
 
-export default function MonthCards({
-  calendarState: { today, focusMonth, translateX, isTransitioning },
-  calendarDispatch,
-}) {
+export default function MonthCards({ calendarDispatch, calendarState }) {
+  const { today, focusMonth, translateX, isTransitioning } = calendarState;
   const curYear = today.getFullYear();
   return (
     <CardsWrapper
@@ -27,8 +25,9 @@ export default function MonthCards({
     >
       {new Array(CARD_LENGTH).fill(0).map((_, i) => (
         <MonthCard
-          today={today}
           months={new Date(curYear, focusMonth - 1 + i)}
+          calendarDispatch={calendarDispatch}
+          calendarState={calendarState}
         />
       ))}
     </CardsWrapper>

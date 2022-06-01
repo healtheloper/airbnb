@@ -38,13 +38,13 @@ export default function BigMenu({
         return checkin === '' ? (
           <Typography variant="input1">{placeholder}</Typography>
         ) : (
-          <Typography variant="input1">{checkin}</Typography>
+          <Typography variant="input1">{checkin.toLocaleString()}</Typography>
         );
       case 'checkout':
         return checkout === '' ? (
           <Typography variant="input1">{placeholder}</Typography>
         ) : (
-          <Typography variant="input1">{checkout}</Typography>
+          <Typography variant="input1">{checkout.toLocaleString()}</Typography>
         );
       default:
         return <Typography variant="input1">{placeholder}</Typography>;

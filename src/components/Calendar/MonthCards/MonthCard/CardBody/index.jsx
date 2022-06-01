@@ -26,7 +26,8 @@ const UnclickableDate = styled.span`
 
 const totalBodyElementLength = 49; // 7 * 7
 
-export default function CardBody({ months, today }) {
+export default function CardBody({ months, calendarState, calendarDispatch }) {
+  const { today } = calendarState;
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const year = months.getFullYear();
   const monthIdx = months.getMonth();
@@ -67,7 +68,15 @@ export default function CardBody({ months, today }) {
       {filledBodyArray.map(bodyEl => {
         switch (getElementType(bodyEl)) {
           case 'CLICKABLE_NUM':
-            return <ClickableDate year={year} month={monthIdx} date={bodyEl} />;
+            return (
+              <ClickableDate
+                year={year}
+                month={monthIdx}
+                date={bodyEl}
+                calendarDispatch={calendarDispatch}
+                calendarState={calendarState}
+              />
+            );
           case 'UNCLICKABLE_NUM':
             return (
               <BodyElement>

@@ -16,9 +16,36 @@ const BodyElement = styled.li`
   }
 `;
 
-export default function ClickableDate({ year, month, date }) {
+export default function ClickableDate({
+  year,
+  month,
+  date,
+  calendarState: { checkin },
+  calendarDispatch,
+}) {
   const handleClickDate = () => {
-    console.log(year, month, date);
+    const myDate = new Date(year, month, date);
+    /**
+     * NEW CHECK IN
+     * 1. CHECK IN 이 없는 경우
+     * 2. CHECK IN 이 있지만 현재 CHECK IN 보다 앞 날짜를 고르는 경우
+     */
+    const newCheckInCondOne = checkin === '';
+    console.log(checkin);
+    const newCheckInCondTwo =
+      checkin !== '' && checkin.getTime() > myDate.getTime();
+    /**
+     * CHECK OUT UPDATE
+     * 1. CHECK IN 이 있고, 다음 선택되는 날짜가 CHECK IN 보다 뒤이거나 같은 경우
+     */
+    const checkOutUpdateCond =
+      checkin !== '' && checkin.getTime() <= myDate.getTime();
+
+    if (newCheckInCondOne || newCheckInCondTwo) {
+      calendarDispatch({ type: 'NEW_CHECK_IN', checkin: myDate });
+    } else if (checkOutUpdateCond) {
+      calendarDispatch({ type: 'CHECK_OUT_UPDATE', checkout: myDate });
+    }
   };
   return (
     <BodyElement onClick={handleClickDate}>

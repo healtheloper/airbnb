@@ -1,7 +1,4 @@
 import styled from '@emotion/styled';
-import { useReducer } from 'react';
-
-import widths from '@constants/widths';
 
 import MonthCards from './MonthCards';
 import MonthNav from './MonthNav';
