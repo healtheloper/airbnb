@@ -19,6 +19,9 @@ interface Props {
   calendarState: CalendarState;
 }
 
+const getMonthDateString = (date: Date) =>
+  `${date.getMonth() + 1}월 ${date.getDate()}일`;
+
 export default function BigMenu({
   menu: { title, placeholder, menuType },
   width,
@@ -38,13 +41,17 @@ export default function BigMenu({
         return checkin === '' ? (
           <Typography variant="input1">{placeholder}</Typography>
         ) : (
-          <Typography variant="input1">{checkin.toLocaleString()}</Typography>
+          <Typography variant="input1">
+            {getMonthDateString(checkin)}
+          </Typography>
         );
       case 'checkout':
         return checkout === '' ? (
           <Typography variant="input1">{placeholder}</Typography>
         ) : (
-          <Typography variant="input1">{checkout.toLocaleString()}</Typography>
+          <Typography variant="input1">
+            {getMonthDateString(checkout)}
+          </Typography>
         );
       default:
         return <Typography variant="input1">{placeholder}</Typography>;

@@ -5,9 +5,11 @@ import BigMenu, { IBigMenu } from '@components/Header/BigSearchBar/BigMenu';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
 
+type CheckInOut = Date | '';
+
 export interface CalendarState {
-  checkin: string;
-  checkout: string;
+  checkin: CheckInOut;
+  checkout: CheckInOut;
 }
 
 interface Props {

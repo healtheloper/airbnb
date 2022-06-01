@@ -31,7 +31,6 @@ export default function ClickableDate({
      * 2. CHECK IN 이 있지만 현재 CHECK IN 보다 앞 날짜를 고르는 경우
      */
     const newCheckInCondOne = checkin === '';
-    console.log(checkin);
     const newCheckInCondTwo =
       checkin !== '' && checkin.getTime() > myDate.getTime();
     /**
