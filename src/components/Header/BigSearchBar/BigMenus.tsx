@@ -5,6 +5,15 @@ import BigMenu, { IBigMenu } from '@components/Header/BigSearchBar/BigMenu';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
 
+export interface CalendarState {
+  checkin: string;
+  checkout: string;
+}
+
+interface Props {
+  calendarState: CalendarState;
+}
+
 const menus: IBigMenu[] = [
   { menuType: 'checkin', title: '체크인', placeholder: '날짜 입력' },
   { menuType: 'checkout', title: '체크아웃', placeholder: '날짜 입력' },
@@ -14,7 +23,7 @@ const menus: IBigMenu[] = [
 
 const menuWidthsOrder = ['20%', '20%', '30%', '30%'];
 
-export default function BigMenus() {
+export default function BigMenus({ calendarState }: Props) {
   const headerState = useHeaderState();
   const headerDispatch = useHeaderDispatch();
 
@@ -36,6 +45,7 @@ export default function BigMenus() {
               width={menuWidthsOrder[idx]}
               isSelectedType={isSelectedType(menu.menuType)}
               changeMenuType={changeMenuType}
+              calendarState={calendarState}
             />
             {idx + 1 !== menus.length && (
               <Divider orientation="vertical" flexItem />

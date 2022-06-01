@@ -2,7 +2,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Fab } from '@mui/material';
 
 import { fadeIn } from '@common/keyframes';
-import Calendar from '@components/Calendar';
+import useCalendar from '@components/Calendar/useCalendar';
 import Chart from '@components/Chart';
 import FlexBox from '@components/FlexBox';
 import BigMenus from '@components/Header/BigSearchBar/BigMenus';
@@ -14,13 +14,14 @@ import { useHeaderState } from '@contexts/HeaderProvider';
 import { PriceProvider } from '@contexts/PriceProvider';
 
 export default function BigSearchBar() {
+  const { state: calendarState, dispatch, Calendar } = useCalendar();
   const { menuType } = useHeaderState();
 
   const getModalItem = () => {
     switch (menuType) {
       case 'checkin':
       case 'checkout':
-        return <Calendar />;
+        return <Calendar dispatch={dispatch} />;
       // TODO: 아래부터 modal 적용
       case 'persons':
         return <div />;

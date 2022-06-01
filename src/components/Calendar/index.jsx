@@ -48,7 +48,7 @@ const reducer = (state, { type }) => {
   }
 };
 
-export default function Calendar() {
+export default function Calendar({ dispatch }) {
   const today = new Date();
 
   // TODO: today 가  new Date() 로 계속 호출되니까 '일' 을 기준으로 뽑아서 useMemo 하면 안될까?

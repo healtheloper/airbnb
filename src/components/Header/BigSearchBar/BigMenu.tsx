@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
+import { CalendarState } from '@components/Header/BigSearchBar/BigMenus';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import color from '@constants/color';
 
@@ -15,6 +16,7 @@ interface Props {
   width: string;
   isSelectedType: boolean;
   changeMenuType: (menuType: MenuType) => void;
+  calendarState: CalendarState;
 }
 
 export default function BigMenu({
@@ -22,9 +24,31 @@ export default function BigMenu({
   width,
   isSelectedType,
   changeMenuType,
+  calendarState,
 }: Props) {
+  const { checkin, checkout } = calendarState;
+
   const handleClickBigMenu = () => {
     changeMenuType(menuType);
+  };
+
+  const getMenuBody = () => {
+    switch (menuType) {
+      case 'checkin':
+        return checkin === '' ? (
+          <Typography variant="input1">{placeholder}</Typography>
+        ) : (
+          <Typography variant="input1">{checkin}</Typography>
+        );
+      case 'checkout':
+        return checkout === '' ? (
+          <Typography variant="input1">{placeholder}</Typography>
+        ) : (
+          <Typography variant="input1">{checkout}</Typography>
+        );
+      default:
+        return <Typography variant="input1">{placeholder}</Typography>;
+    }
   };
 
   return (
@@ -59,7 +83,7 @@ export default function BigMenu({
         onClick={handleClickBigMenu}
       >
         <Typography variant="h6">{title}</Typography>
-        <Typography variant="input1">{placeholder}</Typography>
+        {getMenuBody()}
       </FlexBox>
     </Box>
   );
