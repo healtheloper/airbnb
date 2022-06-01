@@ -14,6 +14,7 @@ const BodyWrapper = styled.ul`
 const BodyElement = styled.li`
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const DayElement = styled.span`
@@ -27,7 +28,27 @@ const UnclickableDate = styled.span`
 const totalBodyElementLength = 49; // 7 * 7
 
 export default function CardBody({ months, calendarState, calendarDispatch }) {
-  const { today } = calendarState;
+  const { today, checkin, checkout } = calendarState;
+
+  const isCheckInDate = (year, month, date) => {
+    const myDate = new Date(year, month, date);
+    return checkin !== '' && myDate.getTime() === checkin.getTime();
+  };
+
+  const isCheckOutDate = (year, month, date) => {
+    const myDate = new Date(year, month, date);
+    return checkout !== '' && myDate.getTime() === checkout.getTime();
+  };
+
+  const isDateBetweenInOut = (year, month, date) => {
+    const myDate = new Date(year, month, date);
+    return (
+      checkout !== '' &&
+      checkin !== '' &&
+      myDate.getTime() >= checkin.getTime() &&
+      myDate.getTime() <= checkout.getTime()
+    );
+  };
 
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const year = months.getFullYear();
@@ -74,6 +95,9 @@ export default function CardBody({ months, calendarState, calendarDispatch }) {
                 year={year}
                 month={monthIdx}
                 date={bodyEl}
+                isCheckInDate={isCheckInDate(year, monthIdx, bodyEl)}
+                isCheckOutDate={isCheckOutDate(year, monthIdx, bodyEl)}
+                isDateBetweenInOut={isDateBetweenInOut(year, monthIdx, bodyEl)}
                 calendarDispatch={calendarDispatch}
                 calendarState={calendarState}
               />

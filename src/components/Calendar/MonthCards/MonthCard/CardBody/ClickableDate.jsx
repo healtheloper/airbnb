@@ -10,19 +10,50 @@ const BodyElement = styled.li`
   cursor: pointer;
   width: 100%;
   height: 100%;
+  ${({ isDateBetweenInOut }) =>
+    isDateBetweenInOut &&
+    `
+    background-color: ${color.grey6};
+  `}
+  ${({ isCheckOutDate }) =>
+    isCheckOutDate &&
+    'border-top-right-radius: 50%; border-bottom-right-radius:50%;'}
+  ${({ isCheckInDate }) =>
+    isCheckInDate &&
+    'border-top-left-radius: 50%; border-bottom-left-radius:50%;'}
+`;
+
+const CircleBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   :hover {
     background-color: ${color.grey1};
     color: ${color.white};
+    border-radius: 50%;
   }
+  ${({ isSelectedDate }) =>
+    isSelectedDate &&
+    `
+    background-color: ${color.grey1};
+    color: ${color.white};
+    border-radius: 50%;
+  `}
 `;
 
 export default function ClickableDate({
   year,
   month,
   date,
+  isCheckInDate,
+  isCheckOutDate,
+  isDateBetweenInOut,
   calendarState: { checkin },
   calendarDispatch,
 }) {
+  const isSelectedData = isCheckInDate || isCheckOutDate;
   const handleClickDate = () => {
     const myDate = new Date(year, month, date);
     /**
@@ -47,8 +78,15 @@ export default function ClickableDate({
     }
   };
   return (
-    <BodyElement onClick={handleClickDate}>
-      <span>{date}</span>
+    <BodyElement
+      onClick={handleClickDate}
+      isCheckInDate={isCheckInDate}
+      isCheckOutDate={isCheckOutDate}
+      isDateBetweenInOut={isDateBetweenInOut}
+    >
+      <CircleBox isSelectedDate={isSelectedData}>
+        <span>{date}</span>
+      </CircleBox>
     </BodyElement>
   );
 }
