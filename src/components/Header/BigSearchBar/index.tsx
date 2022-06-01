@@ -14,14 +14,23 @@ import { useHeaderState } from '@contexts/HeaderProvider';
 import { PriceProvider } from '@contexts/PriceProvider';
 
 export default function BigSearchBar() {
-  const { state: calendarState, dispatch, Calendar } = useCalendar();
+  const {
+    state: calendarState,
+    dispatch: calendarDispatch,
+    Calendar,
+  } = useCalendar();
   const { menuType } = useHeaderState();
 
   const getModalItem = () => {
     switch (menuType) {
       case 'checkin':
       case 'checkout':
-        return <Calendar dispatch={dispatch} />;
+        return (
+          <Calendar
+            calendarState={calendarState}
+            calendarDispatch={calendarDispatch}
+          />
+        );
       // TODO: 아래부터 modal 적용
       case 'persons':
         return <div />;

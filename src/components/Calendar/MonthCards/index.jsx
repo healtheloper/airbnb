@@ -13,8 +13,7 @@ const CardsWrapper = styled.div`
 `;
 
 export default function MonthCards({
-  today,
-  calendarState: { focusMonth, translateX, isTransitioning },
+  calendarState: { today, focusMonth, translateX, isTransitioning },
   calendarDispatch,
 }) {
   const curYear = today.getFullYear();
