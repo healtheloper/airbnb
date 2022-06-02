@@ -15,8 +15,8 @@ type Action =
 type HeaderDispatch = Dispatch<Action>;
 
 const initHeaderState: HeaderState = {
-  menuType: 'none',
-  isFocus: false,
+  menuType: 'checkin',
+  isFocus: true,
 };
 
 const HeaderStateContext = createContext<HeaderState | null>(null);

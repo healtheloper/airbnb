@@ -1,4 +1,5 @@
-import { Box, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, IconButton, Typography } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
 import { CalendarState } from '@components/Header/BigSearchBar/BigMenus';
@@ -73,7 +74,7 @@ export default function BigMenu({
           borderRadius: '3rem',
           height: '100%',
           width: '100%',
-          padding: '0 1.5rem',
+          paddingLeft: '0.5rem',
           cursor: 'pointer',
           ...(isSelectedType
             ? {
@@ -89,8 +90,22 @@ export default function BigMenu({
         }}
         onClick={handleClickBigMenu}
       >
-        <Typography variant="h6">{title}</Typography>
-        {getMenuBody()}
+        <FlexBox jc="space-around" ai="center" sx={{ width: '100%' }}>
+          <FlexBox fd="column">
+            <Typography variant="h6">{title}</Typography>
+            {getMenuBody()}
+          </FlexBox>
+          <IconButton
+            sx={{
+              width: '1.5rem',
+              height: '1.5rem',
+              backgroundColor: color.grey6,
+              '&:hover': { backgroundColor: color.grey5 },
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </FlexBox>
       </FlexBox>
     </Box>
   );
