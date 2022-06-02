@@ -11,6 +11,19 @@ const CANVAS_WIDTH = 400;
 const CANVAS_HEIGHT = 100;
 const normalDistributionValue = 100000;
 
+interface cavansDataProps {
+  [key: number]: number;
+}
+
+interface roomsProps {
+  uuid: number;
+  image: string;
+  city: string;
+  price: number;
+  capacity: number;
+  stars: number;
+}
+
 type AirbnbThumbComponentProps = React.HTMLAttributes<unknown>;
 
 function AirbnbThumbComponent(props: AirbnbThumbComponentProps) {
@@ -43,19 +56,6 @@ const AirbnbSlider = styled(Slider)(() => ({
   },
 }));
 
-interface cavansDataProps {
-  [key: number]: number;
-}
-
-interface roomsProps {
-  uuid: number;
-  image: string;
-  city: string;
-  price: number;
-  capacity: number;
-  stars: number;
-}
-
 const draw = (
   canvas: HTMLCanvasElement | null,
   min: number,
@@ -65,25 +65,84 @@ const draw = (
   const ctx = canvas?.getContext('2d');
 
   if (ctx) {
-    ctx.beginPath();
-    ctx.moveTo(0, CANVAS_HEIGHT);
+    const minPriceObj = Object.keys(priceObj)
+      .filter(price => +price <= min)
+      .reduce((obj: cavansDataProps, key: any) => {
+        // eslint-disable-next-line no-param-reassign
+        obj[key] = priceObj[key];
+        return obj;
+      }, {});
+
+    const maxPriceObj = Object.keys(priceObj)
+      .filter(price => +price >= max)
+      .reduce((obj: cavansDataProps, key: any) => {
+        // eslint-disable-next-line no-param-reassign
+        obj[key] = priceObj[key];
+        return obj;
+      }, {});
+
+    const betweenPriceObj = Object.keys(priceObj)
+      .filter(price => +price >= min && +price <= max)
+      .reduce((obj: cavansDataProps, key: any) => {
+        // eslint-disable-next-line no-param-reassign
+        obj[key] = priceObj[key];
+        return obj;
+      }, {});
+
+    let prevData = 0;
+    let idx = 0;
+    let prevX = 0;
+    let prevY = 0;
+    let x = 0;
+    let y = 0;
+
+    const drawBezierCurve = (
+      obj: cavansDataProps,
+      xInterval: number,
+      maxPrice: number,
+    ) => {
+      Object.values(obj).forEach((data: number) => {
+        x = xInterval * idx;
+        prevX = xInterval * (idx - 1);
+        y = CANVAS_HEIGHT - (data / maxPrice) * 100;
+        prevY = CANVAS_HEIGHT - (prevData / maxPrice) * 100;
+        const controlPoint = (x + prevX) / 2;
+        ctx.bezierCurveTo(controlPoint, prevY, controlPoint, y, x, y);
+        prevData = data;
+        idx += 1;
+      });
+    };
+
+    const fillArea = (xPoint: number, yPoint: number, areaColor: string) => {
+      ctx.strokeStyle = areaColor;
+      ctx.fillStyle = areaColor;
+      ctx.stroke();
+      ctx.lineTo(xPoint, CANVAS_HEIGHT);
+      ctx.fill();
+      ctx.closePath();
+      ctx.beginPath();
+      ctx.moveTo(xPoint, CANVAS_HEIGHT);
+      ctx.lineTo(xPoint, yPoint);
+    };
 
     const priceObjLength = Object.keys(priceObj).length;
     const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength);
     const maxPrice = Math.max(...Object.values(priceObj));
 
-    let prevData = 0;
+    ctx.moveTo(0, CANVAS_HEIGHT);
+    // min 값 이전 그리기
+    drawBezierCurve(minPriceObj, xInterval, maxPrice);
+    fillArea(x, y, color.bgColor);
 
-    Object.values(priceObj).forEach((data, index) => {
-      const x = xInterval * (index + 1);
-      const prevX = xInterval * index;
-      const controlPoint = (x + prevX) / 2;
-      const y = CANVAS_HEIGHT - (data / maxPrice) * 100;
-      const prevY = CANVAS_HEIGHT - (prevData / maxPrice) * 100;
-      ctx.bezierCurveTo(controlPoint, prevY, controlPoint, y, x, y);
-      prevData = data;
-    });
+    // min ~ max 값 그리기
+    drawBezierCurve(betweenPriceObj, xInterval, maxPrice);
+    fillArea(x, y, color.black);
 
+    // max 값 이후 그리기
+    drawBezierCurve(maxPriceObj, xInterval, maxPrice);
+
+    ctx.strokeStyle = color.bgColor;
+    ctx.stroke();
     ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.fillStyle = color.bgColor;
     ctx.fill();
@@ -106,24 +165,27 @@ const calculateRangeCount = () => {
     .filter(n => n !== 0);
   let standard = normalDistributionValue;
 
-  return data.reduce((prev: cavansDataProps, cur: number) => {
-    if (cur > standard) {
-      standard += normalDistributionValue;
-    }
+  return data.reduce(
+    (prev: cavansDataProps, cur: number) => {
+      if (cur > standard) {
+        standard += normalDistributionValue;
+      }
 
-    // eslint-disable-next-line no-param-reassign
-    if (prev[standard] === undefined) prev[standard] = 0;
+      // eslint-disable-next-line no-param-reassign
+      if (prev[standard] === undefined) prev[standard] = 0;
 
-    // eslint-disable-next-line no-param-reassign
-    prev[standard] += 1;
-    return prev;
-  }, {});
+      // eslint-disable-next-line no-param-reassign
+      prev[standard] += 1;
+      return prev;
+    },
+    { 0: 0 },
+  );
 };
 
 const getAveragePrice = (min: number, max: number) => {
   // min, max 를 받아서 그 안의 값만 평균구하기
   let idx = 0;
-  const sumData = rooms.data
+  const data = rooms.data
     .map(room => room.price)
     .reduce((prev, curr) => {
       if (curr >= min && curr <= max) {
@@ -133,9 +195,8 @@ const getAveragePrice = (min: number, max: number) => {
       return prev;
     }, 0);
 
-  return sumData === 0 ? 0 : Math.floor(sumData / idx);
+  return idx === 0 ? 0 : Math.floor(data / idx);
 };
-
 export default function Chart() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [price, setPrice] = useState({
@@ -225,7 +286,7 @@ export default function Chart() {
             position: 'absolute',
             padding: 0,
             bottom: 0,
-            color: color.bgColor,
+            color: color.white,
           }}
         />
       </FlexBox>
