@@ -85,7 +85,7 @@ export default function BigSearchBar() {
         <Fab
           variant="extended"
           color="primary"
-          sx={{ width: '6rem', mr: '1rem' }}
+          sx={{ width: '6rem', mr: '1rem', position: 'absolute', right: 0 }}
         >
           <SearchIcon
             sx={{

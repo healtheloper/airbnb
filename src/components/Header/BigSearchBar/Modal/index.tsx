@@ -24,8 +24,7 @@ const menuHeightInfo: MenuInfoType = {
 };
 
 interface ModalProps {
-  // TODO: 나중에 optional 풀기
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export default function Modal({ children }: ModalProps) {

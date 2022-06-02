@@ -25,7 +25,7 @@ const menus: IBigMenu[] = [
   { menuType: 'persons', title: '인원', placeholder: '게스트 추가' },
 ];
 
-const menuWidthsOrder = ['20%', '20%', '30%', '30%'];
+const menuWidthsOrder = ['20%', '20%', '25%', '35%'];
 
 export default function BigMenus({
   calendarState,

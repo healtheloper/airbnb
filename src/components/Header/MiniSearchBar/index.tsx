@@ -28,9 +28,9 @@ export default function MiniSearchBar() {
         opacity: 1,
         transition: 'all 0.25s ease',
         zIndex: 2,
+        boxShadow: '0 1px 2px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 5%);',
         '&:hover': {
-          boxShadow:
-            '0px 4px 10px rgba(51, 51, 51, 0.1), 0px 0px 4px rgba(51, 51, 51, 0.05);',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.18)',
         },
         ...(isFocus && {
           transform: 'scale(2.6,1.2) translateY(4rem)',
