@@ -17,6 +17,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   rules: {
+    'no-param-reassign': ['error', { props: false }],
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     // 화살표 함수의 파라미터가 하나일때 괄호 생략
@@ -28,6 +29,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // hooks의 의존성배열이 충분하지 않을때 강제로 의존성을 추가하는 규칙을 완화
     'react-hooks/exhaustive-deps': 'warn',
+    'react/jsx-props-no-spreading': 'warn', // props로 받은 것 바로 props로 넘기기 허용
     'react/jsx-filename-extension': [
       'warn',
       { extensions: ['ts', 'tsx', 'jsx'] },
