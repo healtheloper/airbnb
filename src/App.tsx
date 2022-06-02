@@ -6,15 +6,18 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { theme } from '@common/theme';
 import Layout from '@components/Layout';
 import color from '@constants/color';
-import { HeaderProvider } from '@contexts/HeaderProvider';
+import { HeaderProvider, useHeaderState } from '@contexts/HeaderProvider';
 import MainPage from '@pages/MainPage';
 
 function MyGlobalStyles() {
+  const { isFocus } = useHeaderState();
+
   return (
     <GlobalStyles
       styles={{
         body: {
           color: color.grey1,
+          ...(isFocus && { backgroundColor: color.bgColor }),
         },
         ul: {
           listStyle: 'none',
@@ -39,9 +42,9 @@ export default function App() {
   return (
     <div className="App">
       <CssBaseline />
-      <MyGlobalStyles />
-      <ThemeProvider theme={theme}>
-        <HeaderProvider>
+      <HeaderProvider>
+        <MyGlobalStyles />
+        <ThemeProvider theme={theme}>
           <Router>
             <Routes>
               <Route path="/" element={<Layout />}>
@@ -49,8 +52,8 @@ export default function App() {
               </Route>
             </Routes>
           </Router>
-        </HeaderProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </HeaderProvider>
     </div>
   );
 }
