@@ -64,7 +64,7 @@ export default function Header() {
             }}
           >
             <MiniSearchBar />
-            {/* <Category /> */}
+            <Category />
             <BigSearchBar />
           </Container>
           {/* <Container maxWidth={isFocus ? 'md' : 'sm'} sx={{ mx: 0 }}>

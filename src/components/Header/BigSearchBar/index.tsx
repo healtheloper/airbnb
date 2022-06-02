@@ -1,7 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { Fab } from '@mui/material';
 
-import { fadeIn } from '@common/keyframes';
 import useCalendar from '@components/Calendar/useCalendar';
 import Chart from '@components/Chart';
 import FlexBox from '@components/FlexBox';
