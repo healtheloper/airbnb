@@ -58,7 +58,7 @@ export default function useCalendar() {
     isLeft: false,
   };
 
-  const [state, dispatch] = useReducer(reducer, initState);
+  const [calendarState, calendarDispatch] = useReducer(reducer, initState);
 
-  return { state, dispatch, Calendar };
+  return { calendarState, calendarDispatch, Calendar };
 }

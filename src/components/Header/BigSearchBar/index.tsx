@@ -14,11 +14,7 @@ import { useHeaderState } from '@contexts/HeaderProvider';
 import { PriceProvider } from '@contexts/PriceProvider';
 
 export default function BigSearchBar() {
-  const {
-    state: calendarState,
-    dispatch: calendarDispatch,
-    Calendar,
-  } = useCalendar();
+  const { calendarState, calendarDispatch, Calendar } = useCalendar();
   const { menuType } = useHeaderState();
 
   const getModalItem = () => {
