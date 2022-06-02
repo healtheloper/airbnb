@@ -1,7 +1,6 @@
 import { Link, Breadcrumbs } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import { fadeIn } from '@common/keyframes';
 import color from '@constants/color';
 import { useHeaderState } from '@contexts/HeaderProvider';
 

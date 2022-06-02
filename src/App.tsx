@@ -14,7 +14,6 @@ function MyGlobalStyles() {
     <GlobalStyles
       styles={{
         body: {
-          backgroundColor: color.bgColor,
           color: color.grey1,
         },
         ul: {
