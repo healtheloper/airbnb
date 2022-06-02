@@ -52,7 +52,22 @@ export default function Header() {
           jc="space-between"
         >
           <Logo />
-          <Container maxWidth={isFocus ? 'md' : 'sm'} sx={{ mx: 0 }}>
+          <Container
+            maxWidth={isFocus ? 'md' : 'sm'}
+            sx={{
+              mx: 0,
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <MiniSearchBar />
+            {/* <Category /> */}
+            <BigSearchBar />
+          </Container>
+          {/* <Container maxWidth={isFocus ? 'md' : 'sm'} sx={{ mx: 0 }}>
             {isFocus ? (
               <FlexBox fd="column" ai="center">
                 <Category />
@@ -61,7 +76,7 @@ export default function Header() {
             ) : (
               <MiniSearchBar />
             )}
-          </Container>
+          </Container> */}
           <UserInfo />
         </FlexBox>
       </Container>
