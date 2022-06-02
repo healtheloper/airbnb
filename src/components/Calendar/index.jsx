@@ -15,7 +15,11 @@ const MonthCardsWrapper = styled.div`
   overflow: hidden;
 `;
 
-export default function Calendar({ calendarState, calendarDispatch }) {
+export default function Calendar({
+  calendarState,
+  calendarDispatch,
+  onCardElClick = () => {},
+}) {
   return (
     <Wrapper>
       <MonthNav calendarDispatch={calendarDispatch} />
@@ -23,6 +27,7 @@ export default function Calendar({ calendarState, calendarDispatch }) {
         <MonthCards
           calendarDispatch={calendarDispatch}
           calendarState={calendarState}
+          onCardElClick={onCardElClick}
         />
       </MonthCardsWrapper>
     </Wrapper>

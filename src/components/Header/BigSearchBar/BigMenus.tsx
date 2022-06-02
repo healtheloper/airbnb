@@ -3,7 +3,6 @@ import React from 'react';
 
 import BigMenu, { IBigMenu } from '@components/Header/BigSearchBar/BigMenu';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
-import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
 
 type CheckInOut = Date | '';
 
@@ -14,6 +13,8 @@ export interface CalendarState {
 
 interface Props {
   calendarState: CalendarState;
+  changeMenuType: (menuType: MenuType) => void;
+  isSelectedType: (menuType: MenuType) => boolean;
 }
 
 const menus: IBigMenu[] = [
@@ -25,17 +26,11 @@ const menus: IBigMenu[] = [
 
 const menuWidthsOrder = ['20%', '20%', '30%', '30%'];
 
-export default function BigMenus({ calendarState }: Props) {
-  const headerState = useHeaderState();
-  const headerDispatch = useHeaderDispatch();
-
-  const isSelectedType = (menuType: MenuType) =>
-    menuType === headerState.menuType;
-
-  const changeMenuType = (menuType: MenuType) => {
-    headerDispatch({ type: 'CHANGE_MENU_TYPE', menuType });
-  };
-
+export default function BigMenus({
+  calendarState,
+  changeMenuType,
+  isSelectedType,
+}: Props) {
   return (
     <>
       {menus.reduce(

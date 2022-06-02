@@ -12,7 +12,12 @@ const CardWrapper = styled.div`
   grid-template-rows: 1fr 5fr;
 `;
 
-export default function MonthCard({ months, calendarDispatch, calendarState }) {
+export default function MonthCard({
+  months,
+  calendarDispatch,
+  calendarState,
+  onCardElClick,
+}) {
   return (
     <CardWrapper>
       <CardTitle months={months} />
@@ -20,6 +25,7 @@ export default function MonthCard({ months, calendarDispatch, calendarState }) {
         months={months}
         calendarDispatch={calendarDispatch}
         calendarState={calendarState}
+        onCardElClick={onCardElClick}
       />
     </CardWrapper>
   );

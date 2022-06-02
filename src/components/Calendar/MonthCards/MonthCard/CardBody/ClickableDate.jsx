@@ -52,9 +52,10 @@ export default function ClickableDate({
   isDateBetweenInOut,
   calendarState: { checkin },
   calendarDispatch,
+  onCardElClick,
 }) {
   const isSelectedData = isCheckInDate || isCheckOutDate;
-  const handleClickDate = () => {
+  const handleClickDate = (...args) => {
     const myDate = new Date(year, month, date);
     /**
      * NEW CHECK IN
@@ -75,6 +76,9 @@ export default function ClickableDate({
       calendarDispatch({ type: 'NEW_CHECK_IN', checkin: myDate });
     } else if (checkOutUpdateCond) {
       calendarDispatch({ type: 'CHECK_OUT_UPDATE', checkout: myDate });
+    }
+    if (onCardElClick) {
+      onCardElClick(...args);
     }
   };
   return (

@@ -27,7 +27,12 @@ const UnclickableDate = styled.span`
 
 const totalBodyElementLength = 49; // 7 * 7
 
-export default function CardBody({ months, calendarState, calendarDispatch }) {
+export default function CardBody({
+  months,
+  calendarState,
+  calendarDispatch,
+  onCardElClick,
+}) {
   const { today, checkin, checkout } = calendarState;
 
   const isCheckInDate = (year, month, date) => {
@@ -100,6 +105,7 @@ export default function CardBody({ months, calendarState, calendarDispatch }) {
                 isDateBetweenInOut={isDateBetweenInOut(year, monthIdx, bodyEl)}
                 calendarDispatch={calendarDispatch}
                 calendarState={calendarState}
+                onCardElClick={onCardElClick}
               />
             );
           case 'UNCLICKABLE_NUM':
