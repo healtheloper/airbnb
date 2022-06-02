@@ -19,6 +19,17 @@ function reducer(state, action) {
         ...state,
         checkout: action.checkout,
       };
+    case 'CHECK_IN_DELETE':
+      return {
+        ...state,
+        checkin: '',
+        checkout: '',
+      };
+    case 'CHECK_OUT_DELETE':
+      return {
+        ...state,
+        checkout: '',
+      };
     case 'LEFT_ARROW_CLICK':
       return {
         ...state,

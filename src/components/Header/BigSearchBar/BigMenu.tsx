@@ -18,6 +18,7 @@ interface Props {
   isSelectedType: boolean;
   changeMenuType: (menuType: MenuType) => void;
   calendarState: CalendarState;
+  calendarDispatch: (param: object) => void;
 }
 
 const getMonthDateString = (date: Date) =>
@@ -29,31 +30,49 @@ export default function BigMenu({
   isSelectedType,
   changeMenuType,
   calendarState,
+  calendarDispatch,
 }: Props) {
+  let closeBtnVisibility = 'hidden';
   const { checkin, checkout } = calendarState;
 
   const handleClickBigMenu = () => {
     changeMenuType(menuType);
   };
 
+  const handleClickCloseBtn = () => {
+    if (menuType === 'checkin') {
+      calendarDispatch({ type: 'CHECK_IN_DELETE' });
+    } else if (menuType === 'checkout') {
+      calendarDispatch({ type: 'CHECK_OUT_DELETE' });
+    }
+  };
+
   const getMenuBody = () => {
     switch (menuType) {
-      case 'checkin':
-        return checkin === '' ? (
-          <Typography variant="input1">{placeholder}</Typography>
-        ) : (
-          <Typography variant="input1">
-            {getMonthDateString(checkin)}
-          </Typography>
-        );
-      case 'checkout':
-        return checkout === '' ? (
-          <Typography variant="input1">{placeholder}</Typography>
-        ) : (
-          <Typography variant="input1">
-            {getMonthDateString(checkout)}
-          </Typography>
-        );
+      case 'checkin': {
+        const isExistCheckIn = checkin !== '';
+        if (isExistCheckIn) {
+          closeBtnVisibility = 'visible';
+          return (
+            <Typography variant="input1">
+              {getMonthDateString(checkin)}
+            </Typography>
+          );
+        }
+        return <Typography variant="input1">{placeholder}</Typography>;
+      }
+      case 'checkout': {
+        const isExistCheckOut = checkout !== '';
+        if (isExistCheckOut) {
+          closeBtnVisibility = 'visible';
+          return (
+            <Typography variant="input1">
+              {getMonthDateString(checkout)}
+            </Typography>
+          );
+        }
+        return <Typography variant="input1">{placeholder}</Typography>;
+      }
       default:
         return <Typography variant="input1">{placeholder}</Typography>;
     }
@@ -100,8 +119,10 @@ export default function BigMenu({
               width: '1.5rem',
               height: '1.5rem',
               backgroundColor: color.grey6,
+              visibility: closeBtnVisibility,
               '&:hover': { backgroundColor: color.grey5 },
             }}
+            onClick={handleClickCloseBtn}
           >
             <CloseIcon fontSize="small" />
           </IconButton>

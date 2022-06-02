@@ -13,6 +13,7 @@ export interface CalendarState {
 
 interface Props {
   calendarState: CalendarState;
+  calendarDispatch: () => void;
   changeMenuType: (menuType: MenuType) => void;
   isSelectedType: (menuType: MenuType) => boolean;
 }
@@ -28,6 +29,7 @@ const menuWidthsOrder = ['20%', '20%', '30%', '30%'];
 
 export default function BigMenus({
   calendarState,
+  calendarDispatch,
   changeMenuType,
   isSelectedType,
 }: Props) {
@@ -43,6 +45,7 @@ export default function BigMenus({
               isSelectedType={isSelectedType(menu.menuType)}
               changeMenuType={changeMenuType}
               calendarState={calendarState}
+              calendarDispatch={calendarDispatch}
             />
             {idx + 1 !== menus.length && (
               <Divider orientation="vertical" flexItem />

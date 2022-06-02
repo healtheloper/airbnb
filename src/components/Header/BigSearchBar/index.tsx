@@ -69,6 +69,7 @@ export default function BigSearchBar() {
       >
         <BigMenus
           calendarState={calendarState}
+          calendarDispatch={calendarDispatch}
           isSelectedType={isSelectedType}
           changeMenuType={changeMenuType}
         />
