@@ -17,7 +17,6 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   rules: {
-    'no-param-reassign': ['error', { props: false }],
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     // 화살표 함수의 파라미터가 하나일때 괄호 생략
