@@ -11,6 +11,7 @@ import color from '@constants/color';
 import fontSize from '@constants/fontSize';
 import widths from '@constants/widths';
 import { useHeaderState } from '@contexts/HeaderProvider';
+import { PriceProvider } from '@contexts/PriceProvider';
 
 export default function BigSearchBar() {
   const { menuType } = useHeaderState();
@@ -32,36 +33,39 @@ export default function BigSearchBar() {
     }
   };
   return (
-    <FlexBox
-      component="article"
-      sx={{
-        position: 'relative',
-        backgroundColor: color.grey6,
-        width: `${widths.bigHeader.rem}rem`,
-        height: '4.75rem',
-        marginTop: '1.25rem',
-        border: 1,
-        borderColor: color.grey4,
-        borderRadius: '3.75rem',
-        animation: `${fadeIn} .3s ease`,
-      }}
-      ai="center"
-    >
-      <BigMenus />
-      <Fab
-        variant="extended"
-        color="primary"
-        sx={{ width: '6rem', mr: '1rem' }}
+    <PriceProvider>
+      <FlexBox
+        component="article"
+        sx={{
+          position: 'relative',
+          backgroundColor: color.grey6,
+          width: `${widths.bigHeader.rem}rem`,
+          height: '4.75rem',
+          marginTop: '1.25rem',
+          border: 1,
+          borderColor: color.grey4,
+          borderRadius: '3.75rem',
+          animation: `${fadeIn} .3s ease`,
+        }}
+        ai="center"
       >
-        <SearchIcon
-          sx={{
-            color: color.white,
-            fontSize: fontSize.fontDefault,
-          }}
-        />
-        <span>검색</span>
-      </Fab>
-      <Modal>{getModalItem()}</Modal>
-    </FlexBox>
+        <BigMenus />
+
+        <Fab
+          variant="extended"
+          color="primary"
+          sx={{ width: '6rem', mr: '1rem' }}
+        >
+          <SearchIcon
+            sx={{
+              color: color.white,
+              fontSize: fontSize.fontDefault,
+            }}
+          />
+          <span>검색</span>
+        </Fab>
+        <Modal>{getModalItem()}</Modal>
+      </FlexBox>
+    </PriceProvider>
   );
 }
