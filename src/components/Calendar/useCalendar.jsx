@@ -14,6 +14,12 @@ function reducer(state, action) {
         checkin: action.checkin,
         checkout: '',
       };
+    case 'CHECK_OUT_HOVER_UPDATE': {
+      return {
+        ...state,
+        checkoutHover: action.checkoutHover,
+      };
+    }
     case 'CHECK_OUT_UPDATE':
       return {
         ...state,
@@ -63,6 +69,7 @@ export default function useCalendar() {
     today,
     checkin: '',
     checkout: '',
+    checkoutHover: '',
     focusMonth: today.getMonth(),
     translateX: initTranslateX,
     isTransitioning: false,

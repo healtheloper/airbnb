@@ -33,7 +33,7 @@ export default function CardBody({
   calendarDispatch,
   onCardElClick,
 }) {
-  const { today, checkin, checkout } = calendarState;
+  const { today, checkin, checkout, checkoutHover } = calendarState;
 
   const isCheckInDate = (year, month, date) => {
     const myDate = new Date(year, month, date);
@@ -47,12 +47,20 @@ export default function CardBody({
 
   const isDateBetweenInOut = (year, month, date) => {
     const myDate = new Date(year, month, date);
-    return (
-      checkout !== '' &&
-      checkin !== '' &&
-      myDate.getTime() >= checkin.getTime() &&
-      myDate.getTime() <= checkout.getTime()
-    );
+    if (checkin === '') return false;
+    if (checkout !== '') {
+      return (
+        myDate.getTime() >= checkin.getTime() &&
+        myDate.getTime() <= checkout.getTime()
+      );
+    }
+    if (checkoutHover !== '') {
+      return (
+        myDate.getTime() >= checkin.getTime() &&
+        myDate.getTime() <= checkoutHover.getTime()
+      );
+    }
+    return false;
   };
 
   const days = ['일', '월', '화', '수', '목', '금', '토'];

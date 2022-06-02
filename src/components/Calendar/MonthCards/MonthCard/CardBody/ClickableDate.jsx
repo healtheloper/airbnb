@@ -50,13 +50,14 @@ export default function ClickableDate({
   isCheckInDate,
   isCheckOutDate,
   isDateBetweenInOut,
-  calendarState: { checkin },
+  calendarState: { checkin, checkout },
   calendarDispatch,
   onCardElClick,
 }) {
   const isSelectedData = isCheckInDate || isCheckOutDate;
+  const myDate = new Date(year, month, date);
+
   const handleClickDate = (...args) => {
-    const myDate = new Date(year, month, date);
     /**
      * NEW CHECK IN
      * 1. CHECK IN 이 없는 경우
@@ -81,9 +82,22 @@ export default function ClickableDate({
       onCardElClick(...args);
     }
   };
+
+  const handleMouseEnterDate = () => {
+    // 1. Checkin 이 선택되지 않았다면
+    if (checkin === '') return;
+    // 2. Checkin 과 Checkout 모두 선택되었다면
+    if (checkin !== '' && checkout !== '') return;
+
+    calendarDispatch({
+      type: 'CHECK_OUT_HOVER_UPDATE',
+      checkoutHover: myDate,
+    });
+  };
   return (
     <BodyElement
       onClick={handleClickDate}
+      onMouseEnter={handleMouseEnterDate}
       isCheckInDate={isCheckInDate}
       isCheckOutDate={isCheckOutDate}
       isDateBetweenInOut={isDateBetweenInOut}
