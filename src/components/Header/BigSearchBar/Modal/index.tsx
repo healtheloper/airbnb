@@ -34,7 +34,17 @@ export default function Modal({ children }: ModalProps) {
   const height: string = menuHeightInfo[menuType];
 
   return (
-    <Paper sx={{ position: 'absolute', right: 0, top: '6rem', width, height }}>
+    <Paper
+      variant="outlined"
+      sx={{
+        position: 'absolute',
+        borderRadius: '3rem',
+        right: 0,
+        top: '6rem',
+        width,
+        height,
+      }}
+    >
       {children}
     </Paper>
   );

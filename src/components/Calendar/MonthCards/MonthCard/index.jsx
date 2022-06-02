@@ -9,7 +9,6 @@ const CardWrapper = styled.div`
   width: ${widths.monthCard.percent}%;
   margin: 0 1%;
   display: grid;
-  grid-template-rows: 1fr 5fr;
 `;
 
 export default function MonthCard({
