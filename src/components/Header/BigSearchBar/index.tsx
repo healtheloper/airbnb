@@ -1,7 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { Fab } from '@mui/material';
 
-import { fadeIn } from '@common/keyframes';
 import useCalendar from '@components/Calendar/useCalendar';
 import Chart from '@components/Chart';
 import FlexBox from '@components/FlexBox';
@@ -55,7 +54,7 @@ export default function BigSearchBar() {
       <FlexBox
         component="article"
         sx={{
-          position: 'relative',
+          position: 'absolute',
           backgroundColor: color.grey6,
           width: `${widths.bigHeader.rem}rem`,
           height: '4.75rem',
@@ -63,7 +62,17 @@ export default function BigSearchBar() {
           border: 1,
           borderColor: color.grey4,
           borderRadius: '3.75rem',
-          animation: `${fadeIn} .3s ease`,
+          visibility: 'none',
+          opacity: 0,
+          transform: 'scale(0.375, 0.8)',
+          transition: 'all 0.25s ease',
+          zIndex: -1,
+          ...(headerState.isFocus && {
+            transform: 'translateY(4rem)',
+            visibility: 'visible',
+            opacity: 1,
+            zIndex: 2,
+          }),
         }}
         ai="center"
       >
@@ -76,7 +85,7 @@ export default function BigSearchBar() {
         <Fab
           variant="extended"
           color="primary"
-          sx={{ width: '6rem', mr: '1rem' }}
+          sx={{ width: '6rem', mr: '1rem', position: 'absolute', right: 0 }}
         >
           <SearchIcon
             sx={{
