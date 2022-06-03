@@ -3,30 +3,35 @@ import { styled } from '@mui/material/styles';
 import React, { useState, useRef, useEffect } from 'react';
 
 import color from '@constants/color';
-import { PriceState } from '@contexts/PriceProvider';
+import { PriceState, usePriceDispatch } from '@contexts/PriceProvider';
 import rooms from '@mocks/room';
 
 /**
  * 전역변수
  * CANVAS_WIDTH : 캔버스 가로 크기
  * CANVAS_HEIGHT : 캔버스 세로 크기
- * normalDistributionValue : 차트를 그릴때 기준이되는 x축 값
- * sliderInterval : 슬라이더가 완전히 겹쳐지지 않도록 각 슬라이더에 +-해주는 값
- * percentage: 캔버스의 높이와 최대값으로 백분율을 위해 곱해주는 100
+ * normalDistributionValue : priceObj 키 값 (100000원 단위로 숙소의 개수를 자르는 용도)
+ * sliderInterval : 슬라이더가 완전히 겹쳐지지 않도록 각 슬라이더에 +- 해주는 값
+ * startPoint: 차트 x, y축 시작값 ( 0, 100 )
+ * endPoint: 차트 x, y축 끝값 ( 365, 100)
+ * gradientRatio: 그레디언트 색상 비율
  */
 const CANVAS_WIDTH = 365;
 const CANVAS_HEIGHT = 100;
 const normalDistributionValue = 100000;
-const sliderInterval = 10000;
-const percentage = 100;
+const sliderInterval = 5;
+const gradientRatio = 0.01;
+
+const startPoint = { x: 0, y: CANVAS_HEIGHT };
+const endPoint = { x: CANVAS_WIDTH, y: CANVAS_HEIGHT };
 
 interface cavansDataProps {
   [key: number]: number;
 }
 
-interface priceProps {
+interface graphProps {
   priceState: PriceState;
-  priceDispatch: any;
+  initPrice: any;
 }
 
 type AirbnbThumbComponentProps = React.HTMLAttributes<unknown>;
@@ -63,6 +68,24 @@ const AirbnbSlider = styled(Slider)(() => ({
   },
 }));
 
+const fillArea = (
+  ctx: CanvasRenderingContext2D,
+  style: CanvasGradient,
+  min: number,
+  max: number,
+) => {
+  style.addColorStop(0, color.bgColor);
+
+  style.addColorStop(min * gradientRatio, color.bgColor);
+  style.addColorStop(min * gradientRatio, color.black);
+
+  style.addColorStop(max * gradientRatio, color.black);
+  style.addColorStop(max * gradientRatio, color.bgColor);
+  style.addColorStop(1, color.bgColor);
+  ctx.fillStyle = style;
+  ctx.fill();
+};
+
 const draw = (
   canvas: HTMLCanvasElement | null,
   min: number,
@@ -73,110 +96,50 @@ const draw = (
   const ctx = canvas?.getContext('2d');
 
   if (ctx) {
-    // 최소값 이전의 값들만 뽑아내기
-    const minPriceObj = Object.keys(priceObj)
-      .filter(price => +price <= min)
-      .reduce((obj: cavansDataProps, key: any) => {
-        const newObj = { ...obj };
-        newObj[key] = priceObj[key];
-        return newObj;
-      }, {});
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // 최대값 이후의 값들만 뽑아내기
-    const maxPriceObj = Object.keys(priceObj)
-      .filter(price => +price >= max)
-      .reduce((obj: cavansDataProps, key: any) => {
-        const newObj = { ...obj };
-        newObj[key] = priceObj[key];
-        return newObj;
-      }, {});
-
-    // 최소 ~ 최대 값들만 뽑아내기
-    const betweenPriceObj = Object.keys(priceObj)
-      .filter(price => +price >= min && +price <= max)
-      .reduce((obj: cavansDataProps, key: any) => {
-        const newObj = { ...obj };
-        newObj[key] = priceObj[key];
-        return newObj;
-      }, {});
-
-    /**
-     * @param prevData: 이전 숙소 값
-     * @param xIndex: x축의 위치를 상대적으로 나타내는 값으로 xInterval의 위치를 동적으로 변경하기 위한 값 (600000원 이하 값들만 들어오다면 현재 100000원 기준으로 그려주고 있기 때문에 idx는 0 ~ 7까지 들어가게됨)
-     * @param prev?: x또는 y축 이전 값을 저장하는 값
-     */
-    let prevData = 0;
-    let xIndex = 0;
-    let prevX = 0;
-    let prevY = 0;
-    let x = 0;
-    let y = 0;
-
-    /**
-     *
-     * @param obj: {300000: 7} 형태로 가격: 숙소 개수 형태로 들어있음.
-     * @param xInterval : x축 위치
-     * @param maxRooms : 숙소 개수 최대값
-     * bezierCurveTo(첫 번째 제어점 x, 첫 번째 제어점 y, 두 번째 제어점 x, 두 번째 제어점y, 끝 점의 x좌표, 끝 점의 y좌표)
-     * 기준 점(첫 번째 제어점)을 하나 정하고 → 곡선의 형태를 지정하는 또 두개의 제어점(두 번째 제어점) →  곡선을 끝낼 기준점(끝 점)
-     */
-    const drawBezierCurve = (
-      obj: cavansDataProps,
-      xInterval: number,
-      maxRooms: number,
-    ) => {
-      Object.values(obj).forEach((data: number) => {
-        x = xInterval * xIndex;
-        prevX = xInterval * (xIndex - 1);
-        y = CANVAS_HEIGHT - (data / maxRooms) * percentage;
-        prevY = CANVAS_HEIGHT - (prevData / maxRooms) * percentage;
-        const controlPoint = (x + prevX) / 2;
-        ctx.bezierCurveTo(controlPoint, prevY, controlPoint, y, x, y);
-        prevData = data;
-        xIndex += 1;
-      });
-    };
+    let pointX = startPoint.x;
+    let startCoords = { ...startPoint };
 
     const priceObjLength = Object.keys(priceObj).length;
-    const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength);
+    const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength + 1);
     const maxRooms = Math.max(...Object.values(priceObj));
 
-    /**
-     *
-     * @param xPoint: 색상을 채우고 채워진 영역 x끝점에서 다시 그려주기 시작하기 위한 값
-     * @param yPoint: 색상을 채우고 채워진 영역 y끝점에서 다시 그려주기 시작하기 위한 값
-     * @param fillColor: 해당 영역을 채울 색상
-     *
-     */
-    const fillArea = (xPoint: number, yPoint: number, fillColor: string) => {
-      ctx.lineTo(xPoint, CANVAS_HEIGHT);
-      ctx.strokeStyle = color.bgColor;
-      ctx.fillStyle = fillColor;
-      ctx.stroke();
-      ctx.fill();
-      ctx.closePath();
-      ctx.beginPath();
-      ctx.moveTo(xPoint, CANVAS_HEIGHT);
-      ctx.lineTo(xPoint, yPoint);
-    };
+    ctx.beginPath();
+    ctx.moveTo(startPoint.x - xInterval, startPoint.y);
 
-    ctx.moveTo(0, CANVAS_HEIGHT);
-    // min 값 이전 그리기
-    drawBezierCurve(minPriceObj, xInterval, maxRooms);
-    fillArea(x, y, color.bgColor);
+    Object.values(priceObj).forEach(data => {
+      pointX += xInterval;
 
-    // min ~ max 값 그리기
-    drawBezierCurve(betweenPriceObj, xInterval, maxRooms);
-    fillArea(x, y, color.black);
+      const coords = {
+        x: pointX,
+        y: CANVAS_HEIGHT - Math.floor((data / maxRooms) * CANVAS_HEIGHT),
+      };
 
-    // max 값 이후 그리기
-    drawBezierCurve(maxPriceObj, xInterval, maxRooms);
+      const controlX = startCoords.x + xInterval / 2;
 
-    ctx.strokeStyle = color.bgColor;
-    ctx.stroke();
-    ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT);
-    ctx.fillStyle = color.bgColor;
-    ctx.fill();
+      ctx.bezierCurveTo(
+        controlX,
+        startCoords.y,
+        controlX,
+        coords.y,
+        coords.x,
+        coords.y,
+      );
+
+      startCoords = { ...coords };
+    });
+
+    ctx.lineTo(endPoint.x, endPoint.y);
+
+    const linearGardaradientStyle = ctx.createLinearGradient(
+      startPoint.x,
+      startPoint.y,
+      endPoint.x,
+      endPoint.y,
+    );
+    fillArea(ctx, linearGardaradientStyle, min, max);
+
     ctx.closePath();
   }
 };
@@ -188,30 +151,25 @@ const calculateRangeCount = () => {
     .filter(n => n !== 0);
   let standard = normalDistributionValue;
 
-  return data.reduce(
-    (prev: cavansDataProps, cur: number) => {
-      if (cur > standard) {
-        standard += normalDistributionValue;
-      }
-      const newPrev = { ...prev };
+  return data.reduce((prev: cavansDataProps, cur: number) => {
+    if (cur > standard) {
+      standard += normalDistributionValue;
+    }
+    const newPrev = { ...prev };
 
-      if (!newPrev[standard]) {
-        newPrev[standard] = 0;
-      }
+    if (!newPrev[standard]) {
+      newPrev[standard] = 0;
+    }
 
-      newPrev[standard] += 1;
-      return newPrev;
-    },
-    { 0: 0 },
-  );
+    newPrev[standard] += 1;
+    return newPrev;
+  }, {});
 };
 
-export default function Graph({ priceState, priceDispatch }: priceProps) {
+export default function Graph({ priceState, initPrice }: graphProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [price, setPrice] = useState(priceState);
-  const { min, max } = priceState;
-
   const [sliderValue, setSliderValue] = useState<number[]>([0, 100]);
+  const priceDispatch = usePriceDispatch();
 
   const handleSlider = (
     event: Event,
@@ -222,37 +180,47 @@ export default function Graph({ priceState, priceDispatch }: priceProps) {
       return;
     }
 
+    const percentage = (initPrice.current.max - initPrice.current.min) / 100;
+
     if (activeThumb === 0) {
       setSliderValue([
-        Math.min(sliderNewValue[0], sliderValue[1] - 5),
+        Math.min(sliderNewValue[0], sliderValue[1] - sliderInterval),
         sliderValue[1],
       ]);
       priceDispatch({
         type: 'MIN_PRICE',
-        min,
+        min: Math.floor(percentage * sliderValue[0]),
       });
     } else {
       setSliderValue([
         sliderValue[0],
-        Math.max(sliderNewValue[1], sliderValue[0] + 5),
+        Math.max(sliderNewValue[1], sliderValue[0] + sliderInterval),
       ]);
+
       priceDispatch({
         type: 'MAX_PRICE',
-        max,
+        max: Math.floor(percentage * sliderValue[1]),
       });
     }
 
-    draw(canvasRef.current, min, max, calculateRangeCount());
+    draw(
+      canvasRef.current,
+      sliderValue[0],
+      sliderValue[1],
+      calculateRangeCount(),
+    );
   };
 
   useEffect(() => {
     const canvas = canvasRef.current;
+
     if (canvas) {
       canvas.width = CANVAS_WIDTH;
       canvas.height = CANVAS_HEIGHT;
-      draw(canvas, min, max, calculateRangeCount());
+      draw(canvas, sliderValue[0], sliderValue[1], calculateRangeCount());
     }
-  }, [min, max]);
+  }, [priceState]);
+
   return (
     <>
       <canvas ref={canvasRef} />
@@ -267,6 +235,8 @@ export default function Graph({ priceState, priceDispatch }: priceProps) {
           bottom: 0,
           color: color.white,
         }}
+        min={0}
+        max={100}
       />
     </>
   );

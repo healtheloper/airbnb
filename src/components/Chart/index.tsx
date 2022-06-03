@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Graph from '@components/Chart/Graph';
 import Title from '@components/Chart/Title';
@@ -44,9 +44,12 @@ const getAveragePrice = (min: number, max: number) => {
 export default function Chart() {
   const priceState = usePriceState();
   const priceDispatch = usePriceDispatch();
+  const initPrice = useRef({});
 
   useEffect(() => {
     const [min, max] = getPriceMinMax(rooms.data);
+    initPrice.current = { min, max };
+
     priceDispatch({ type: 'SET_PRICE', min, max });
   }, [priceDispatch]);
 
@@ -66,7 +69,7 @@ export default function Chart() {
       <FlexBox sx={{ position: 'relative' }} fd="column">
         <Typography sx={{ fontWeight: 700 }}>가격 범위</Typography>
         <Title priceState={priceState} getAveragePrice={getAveragePrice} />
-        <Graph priceState={priceState} priceDispatch={priceDispatch} />
+        <Graph priceState={priceState} initPrice={initPrice} />
       </FlexBox>
     </FlexBox>
   );
