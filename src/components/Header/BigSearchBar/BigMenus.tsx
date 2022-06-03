@@ -3,7 +3,20 @@ import React from 'react';
 
 import BigMenu, { IBigMenu } from '@components/Header/BigSearchBar/BigMenu';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
-import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
+
+type CheckInOut = Date | '';
+
+export interface CalendarState {
+  checkin: CheckInOut;
+  checkout: CheckInOut;
+}
+
+interface Props {
+  calendarState: CalendarState;
+  calendarDispatch: () => void;
+  changeMenuType: (menuType: MenuType) => void;
+  isSelectedType: (menuType: MenuType) => boolean;
+}
 
 const menus: IBigMenu[] = [
   { menuType: 'checkin', title: '체크인', placeholder: '날짜 입력' },
@@ -14,17 +27,12 @@ const menus: IBigMenu[] = [
 
 const menuWidthsOrder = ['20%', '20%', '30%', '30%'];
 
-export default function BigMenus() {
-  const headerState = useHeaderState();
-  const headerDispatch = useHeaderDispatch();
-
-  const isSelectedType = (menuType: MenuType) =>
-    menuType === headerState.menuType;
-
-  const changeMenuType = (menuType: MenuType) => {
-    headerDispatch({ type: 'CHANGE_MENU_TYPE', menuType });
-  };
-
+export default function BigMenus({
+  calendarState,
+  calendarDispatch,
+  changeMenuType,
+  isSelectedType,
+}: Props) {
   return (
     <>
       {menus.reduce(
@@ -36,6 +44,8 @@ export default function BigMenus() {
               width={menuWidthsOrder[idx]}
               isSelectedType={isSelectedType(menu.menuType)}
               changeMenuType={changeMenuType}
+              calendarState={calendarState}
+              calendarDispatch={calendarDispatch}
             />
             {idx + 1 !== menus.length && (
               <Divider orientation="vertical" flexItem />

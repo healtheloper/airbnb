@@ -35,6 +35,8 @@ module.exports = {
     ],
     // React v17 부터는 React 를 import 하지 않아도 되어 off
     'react/react-in-jsx-scope': 'off',
+    // Calendar 의 기본 파라미터를 주기위한 옵션
+    '@typescript-eslint/no-empty-function': 'off',
     'import/order': [
       'error',
       {

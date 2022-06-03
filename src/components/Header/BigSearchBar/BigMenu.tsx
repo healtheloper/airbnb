@@ -1,6 +1,8 @@
-import { Box, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, IconButton, Typography } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
+import { CalendarState } from '@components/Header/BigSearchBar/BigMenus';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import color from '@constants/color';
 
@@ -15,16 +17,65 @@ interface Props {
   width: string;
   isSelectedType: boolean;
   changeMenuType: (menuType: MenuType) => void;
+  calendarState: CalendarState;
+  calendarDispatch: (param: object) => void;
 }
+
+const getMonthDateString = (date: Date) =>
+  `${date.getMonth() + 1}월 ${date.getDate()}일`;
 
 export default function BigMenu({
   menu: { title, placeholder, menuType },
   width,
   isSelectedType,
   changeMenuType,
+  calendarState,
+  calendarDispatch,
 }: Props) {
+  let closeBtnVisibility = 'hidden';
+  const { checkin, checkout } = calendarState;
+
   const handleClickBigMenu = () => {
     changeMenuType(menuType);
+  };
+
+  const handleClickCloseBtn = () => {
+    if (menuType === 'checkin') {
+      calendarDispatch({ type: 'CHECK_IN_DELETE' });
+    } else if (menuType === 'checkout') {
+      calendarDispatch({ type: 'CHECK_OUT_DELETE' });
+    }
+  };
+
+  const getMenuBody = () => {
+    switch (menuType) {
+      case 'checkin': {
+        const isExistCheckIn = checkin !== '';
+        if (isExistCheckIn) {
+          closeBtnVisibility = 'visible';
+          return (
+            <Typography variant="input1">
+              {getMonthDateString(checkin)}
+            </Typography>
+          );
+        }
+        return <Typography variant="input1">{placeholder}</Typography>;
+      }
+      case 'checkout': {
+        const isExistCheckOut = checkout !== '';
+        if (isExistCheckOut) {
+          closeBtnVisibility = 'visible';
+          return (
+            <Typography variant="input1">
+              {getMonthDateString(checkout)}
+            </Typography>
+          );
+        }
+        return <Typography variant="input1">{placeholder}</Typography>;
+      }
+      default:
+        return <Typography variant="input1">{placeholder}</Typography>;
+    }
   };
 
   return (
@@ -42,7 +93,7 @@ export default function BigMenu({
           borderRadius: '3rem',
           height: '100%',
           width: '100%',
-          padding: '0 1.5rem',
+          paddingLeft: '0.5rem',
           cursor: 'pointer',
           ...(isSelectedType
             ? {
@@ -58,8 +109,24 @@ export default function BigMenu({
         }}
         onClick={handleClickBigMenu}
       >
-        <Typography variant="h6">{title}</Typography>
-        <Typography variant="input1">{placeholder}</Typography>
+        <FlexBox jc="space-around" ai="center" sx={{ width: '100%' }}>
+          <FlexBox fd="column">
+            <Typography variant="h6">{title}</Typography>
+            {getMenuBody()}
+          </FlexBox>
+          <IconButton
+            sx={{
+              width: '1.5rem',
+              height: '1.5rem',
+              backgroundColor: color.grey6,
+              visibility: closeBtnVisibility,
+              '&:hover': { backgroundColor: color.grey5 },
+            }}
+            onClick={handleClickCloseBtn}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </FlexBox>
       </FlexBox>
     </Box>
   );

@@ -2,25 +2,43 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Fab } from '@mui/material';
 
 import { fadeIn } from '@common/keyframes';
-import Calendar from '@components/Calendar';
+import useCalendar from '@components/Calendar/useCalendar';
 import Chart from '@components/Chart';
 import FlexBox from '@components/FlexBox';
 import BigMenus from '@components/Header/BigSearchBar/BigMenus';
 import Modal from '@components/Header/BigSearchBar/Modal';
+import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
 import widths from '@constants/widths';
-import { useHeaderState } from '@contexts/HeaderProvider';
+import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
 import { PriceProvider } from '@contexts/PriceProvider';
 
 export default function BigSearchBar() {
-  const { menuType } = useHeaderState();
+  const { calendarState, calendarDispatch, Calendar } = useCalendar();
+  const headerDispatch = useHeaderDispatch();
+  const headerState = useHeaderState();
+
+  const changeMenuType = (menuType: MenuType) => {
+    headerDispatch({ type: 'CHANGE_MENU_TYPE', menuType });
+  };
+
+  const isSelectedType = (menuType: MenuType) =>
+    menuType === headerState.menuType;
 
   const getModalItem = () => {
-    switch (menuType) {
+    switch (headerState.menuType) {
       case 'checkin':
       case 'checkout':
-        return <Calendar />;
+        return (
+          <Calendar
+            calendarState={calendarState}
+            calendarDispatch={calendarDispatch}
+            onCardElClick={() => {
+              changeMenuType('checkout');
+            }}
+          />
+        );
       // TODO: 아래부터 modal 적용
       case 'persons':
         return <div />;
@@ -49,8 +67,12 @@ export default function BigSearchBar() {
         }}
         ai="center"
       >
-        <BigMenus />
-
+        <BigMenus
+          calendarState={calendarState}
+          calendarDispatch={calendarDispatch}
+          isSelectedType={isSelectedType}
+          changeMenuType={changeMenuType}
+        />
         <Fab
           variant="extended"
           color="primary"
