@@ -180,18 +180,27 @@ export default function Graph({ priceState, initPrice }: graphProps) {
       return;
     }
 
-    const percentage = (initPrice.current.max - initPrice.current.min) / 100;
+    const percentage = Math.floor(
+      (initPrice.current.max - initPrice.current.min) / 100,
+    );
 
     if (activeThumb === 0) {
+      const minPrice =
+        initPrice.current.min + Math.floor(percentage * sliderValue[0]);
+
       setSliderValue([
         Math.min(sliderNewValue[0], sliderValue[1] - sliderInterval),
         sliderValue[1],
       ]);
       priceDispatch({
         type: 'MIN_PRICE',
-        min: Math.floor(percentage * sliderValue[0]),
+        min:
+          minPrice < initPrice.current.min ? initPrice.current.min : minPrice,
+        max: initPrice.current.max,
       });
     } else {
+      const maxPrice =
+        initPrice.current.min + Math.floor(percentage * sliderValue[1]);
       setSliderValue([
         sliderValue[0],
         Math.max(sliderNewValue[1], sliderValue[0] + sliderInterval),
@@ -199,7 +208,8 @@ export default function Graph({ priceState, initPrice }: graphProps) {
 
       priceDispatch({
         type: 'MAX_PRICE',
-        max: Math.floor(percentage * sliderValue[1]),
+        min: initPrice.current.min,
+        max: maxPrice,
       });
     }
 

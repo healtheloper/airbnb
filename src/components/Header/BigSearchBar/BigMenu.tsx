@@ -5,6 +5,7 @@ import FlexBox from '@components/FlexBox';
 import { CalendarState } from '@components/Header/BigSearchBar/BigMenus';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import color from '@constants/color';
+import { usePriceState, usePriceDispatch } from '@contexts/PriceProvider';
 
 export interface IBigMenu {
   menuType: MenuType;
@@ -32,6 +33,8 @@ export default function BigMenu({
   calendarState,
   calendarDispatch,
 }: Props) {
+  const priceState = usePriceState();
+  const priceDispatch = usePriceDispatch();
   let closeBtnVisibility = 'hidden';
   const { checkin, checkout } = calendarState;
 
@@ -44,6 +47,8 @@ export default function BigMenu({
       calendarDispatch({ type: 'CHECK_IN_DELETE' });
     } else if (menuType === 'checkout') {
       calendarDispatch({ type: 'CHECK_OUT_DELETE' });
+    } else if (menuType === 'price') {
+      priceDispatch({ type: 'SET_PRICE', min: 0, max: 0 });
     }
   };
 
@@ -68,6 +73,18 @@ export default function BigMenu({
           return (
             <Typography variant="input1">
               {getMonthDateString(checkout)}
+            </Typography>
+          );
+        }
+        return <Typography variant="input1">{placeholder}</Typography>;
+      }
+      case 'price': {
+        if (priceState.min) {
+          closeBtnVisibility = 'visible';
+          return (
+            <Typography variant="input1">
+              {priceState.min.toLocaleString()} ~{' '}
+              {priceState.max.toLocaleString()}
             </Typography>
           );
         }

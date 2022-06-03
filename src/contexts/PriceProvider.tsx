@@ -6,15 +6,15 @@ export interface PriceState {
 }
 
 type Action =
-  | { type: 'MIN_PRICE'; min: number }
-  | { type: 'MAX_PRICE'; max: number }
+  | { type: 'MIN_PRICE'; min: number; max: number }
+  | { type: 'MAX_PRICE'; min: number; max: number }
   | { type: 'SET_PRICE'; min: number; max: number };
 
 type PriceDispatch = Dispatch<Action>;
 
 const initPriceState: PriceState = {
   min: 0,
-  max: 100,
+  max: 0,
 };
 
 const PriceStateContext = createContext<PriceState | null>(null);
@@ -32,10 +32,12 @@ function reducer(state: PriceState, action: Action): PriceState {
       return {
         ...state,
         min: action.min,
+        max: action.max,
       };
     case 'MAX_PRICE':
       return {
         ...state,
+        min: action.min,
         max: action.max,
       };
     default:
