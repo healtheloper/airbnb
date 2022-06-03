@@ -7,10 +7,12 @@ import FlexBox from '@components/FlexBox';
 import BigMenus from '@components/Header/BigSearchBar/BigMenus';
 import Modal from '@components/Header/BigSearchBar/Modal';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
+import Persons from '@components/Persons';
 import color from '@constants/color';
 import fontSize from '@constants/fontSize';
 import widths from '@constants/widths';
 import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
+import { PersonProvider } from '@contexts/PersonProvider';
 import { PriceProvider } from '@contexts/PriceProvider';
 
 export default function BigSearchBar() {
@@ -40,7 +42,7 @@ export default function BigSearchBar() {
         );
       // TODO: 아래부터 modal 적용
       case 'persons':
-        return <div />;
+        return <Persons />;
       case 'price':
         return <Chart />;
       case 'none':
@@ -51,52 +53,54 @@ export default function BigSearchBar() {
   };
   return (
     <PriceProvider>
-      <FlexBox
-        component="article"
-        sx={{
-          position: 'absolute',
-          backgroundColor: color.grey6,
-          width: `${widths.bigHeader.rem}rem`,
-          height: '4.75rem',
-          marginTop: '1.25rem',
-          border: 1,
-          borderColor: color.grey4,
-          borderRadius: '3.75rem',
-          visibility: 'none',
-          opacity: 0,
-          transform: 'scale(0.375, 0.8)',
-          transition: 'all 0.25s ease',
-          zIndex: -1,
-          ...(headerState.isFocus && {
-            transform: 'translateY(4rem)',
-            visibility: 'visible',
-            opacity: 1,
-            zIndex: 2,
-          }),
-        }}
-        ai="center"
-      >
-        <BigMenus
-          calendarState={calendarState}
-          calendarDispatch={calendarDispatch}
-          isSelectedType={isSelectedType}
-          changeMenuType={changeMenuType}
-        />
-        <Fab
-          variant="extended"
-          color="primary"
-          sx={{ width: '6rem', mr: '1rem', position: 'absolute', right: 0 }}
+      <PersonProvider>
+        <FlexBox
+          component="article"
+          sx={{
+            position: 'absolute',
+            backgroundColor: color.grey6,
+            width: `${widths.bigHeader.rem}rem`,
+            height: '4.75rem',
+            marginTop: '1.25rem',
+            border: 1,
+            borderColor: color.grey4,
+            borderRadius: '3.75rem',
+            visibility: 'none',
+            opacity: 0,
+            transform: 'scale(0.375, 0.8)',
+            transition: 'all 0.25s ease',
+            zIndex: -1,
+            ...(headerState.isFocus && {
+              transform: 'translateY(4rem)',
+              visibility: 'visible',
+              opacity: 1,
+              zIndex: 2,
+            }),
+          }}
+          ai="center"
         >
-          <SearchIcon
-            sx={{
-              color: color.white,
-              fontSize: fontSize.fontDefault,
-            }}
+          <BigMenus
+            calendarState={calendarState}
+            calendarDispatch={calendarDispatch}
+            isSelectedType={isSelectedType}
+            changeMenuType={changeMenuType}
           />
-          <span>검색</span>
-        </Fab>
-        <Modal>{getModalItem()}</Modal>
-      </FlexBox>
+          <Fab
+            variant="extended"
+            color="primary"
+            sx={{ width: '6rem', mr: '1rem', position: 'absolute', right: 0 }}
+          >
+            <SearchIcon
+              sx={{
+                color: color.white,
+                fontSize: fontSize.fontDefault,
+              }}
+            />
+            <span>검색</span>
+          </Fab>
+          <Modal>{getModalItem()}</Modal>
+        </FlexBox>
+      </PersonProvider>
     </PriceProvider>
   );
 }

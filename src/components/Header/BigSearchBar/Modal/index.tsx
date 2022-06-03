@@ -11,7 +11,7 @@ const menuWidthInfo: MenuInfoType = {
   checkin: '100%',
   checkout: '100%',
   price: '50%',
-  persons: '40%',
+  persons: '50%',
   none: '0%',
 };
 
