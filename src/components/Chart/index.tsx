@@ -57,9 +57,6 @@ export default function Chart() {
     <FlexBox
       component="article"
       sx={{
-        width: '31rem',
-        height: '22.75rem',
-        padding: '3.25rem 4rem 4.8rem',
         backgroundColor: color.white,
         borderRadius: '2.5rem',
       }}

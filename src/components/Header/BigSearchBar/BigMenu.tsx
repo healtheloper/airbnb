@@ -1,8 +1,8 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Typography } from '@mui/material';
+import { useCalendarState, useCalendarDispatch } from 'react-carousel-calendar';
 
 import FlexBox from '@components/FlexBox';
-import { CalendarState } from '@components/Header/BigSearchBar/BigMenus';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import color from '@constants/color';
 import { usePriceState, usePriceDispatch } from '@contexts/PriceProvider';
@@ -18,8 +18,6 @@ interface Props {
   width: string;
   isSelectedType: boolean;
   changeMenuType: (menuType: MenuType) => void;
-  calendarState: CalendarState;
-  calendarDispatch: (param: object) => void;
 }
 
 const getMonthDateString = (date: Date) =>
@@ -30,9 +28,10 @@ export default function BigMenu({
   width,
   isSelectedType,
   changeMenuType,
-  calendarState,
-  calendarDispatch,
 }: Props) {
+  const calendarState = useCalendarState();
+  const calendarDispatch = useCalendarDispatch();
+
   const priceState = usePriceState();
   const priceDispatch = usePriceDispatch();
   let closeBtnVisibility = 'hidden';
@@ -55,7 +54,7 @@ export default function BigMenu({
   const getMenuBody = () => {
     switch (menuType) {
       case 'checkin': {
-        const isExistCheckIn = checkin !== '';
+        const isExistCheckIn = checkin !== '' && typeof checkin !== 'string';
         if (isExistCheckIn) {
           closeBtnVisibility = 'visible';
           return (
@@ -67,7 +66,7 @@ export default function BigMenu({
         return <Typography variant="input1">{placeholder}</Typography>;
       }
       case 'checkout': {
-        const isExistCheckOut = checkout !== '';
+        const isExistCheckOut = checkout !== '' && typeof checkout !== 'string';
         if (isExistCheckOut) {
           closeBtnVisibility = 'visible';
           return (

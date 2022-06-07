@@ -9,7 +9,6 @@ const listStyle = {
   justifyContent: 'space-between',
   width: '100%',
   height: '100%',
-  padding: '3rem',
 };
 
 const listItemStyle = {
