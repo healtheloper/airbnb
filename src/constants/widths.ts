@@ -10,7 +10,7 @@ const WIDTH_PER_CARD =
 const WIDTH_EXCEPT_MARGIN = WIDTH_PER_CARD - MARGIN_X;
 
 const widths = {
-  bigHeader: { rem: '57.25' },
+  bigHeader: { rem: '50' },
   monthCards: { percent: WIDTH_CARDS },
   monthCard: { percent: WIDTH_EXCEPT_MARGIN },
 };

@@ -27,6 +27,14 @@ export default function UserInfo() {
         onClose={handleClose}
         TransitionComponent={Fade}
         disableScrollLock
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
         PaperProps={{
           sx: {
             marginTop: '0.625rem',

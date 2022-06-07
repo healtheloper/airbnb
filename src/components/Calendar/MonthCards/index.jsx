@@ -13,23 +13,26 @@ const CardsWrapper = styled.div`
 `;
 
 export default function MonthCards({
-  today,
-  focusMonth,
-  translateX,
-  isTransitioning,
-  onCardsTransitionEnd,
+  calendarDispatch,
+  calendarState,
+  onCardElClick,
 }) {
+  const { today, focusMonth, translateX, isTransitioning } = calendarState;
   const curYear = today.getFullYear();
   return (
     <CardsWrapper
-      onTransitionEnd={onCardsTransitionEnd}
+      onTransitionEnd={() => {
+        calendarDispatch({ type: 'CARDS_TRANSITION_END' });
+      }}
       translateX={translateX}
       isTransitioning={isTransitioning}
     >
       {new Array(CARD_LENGTH).fill(0).map((_, i) => (
         <MonthCard
-          today={today}
           months={new Date(curYear, focusMonth - 1 + i)}
+          calendarDispatch={calendarDispatch}
+          calendarState={calendarState}
+          onCardElClick={onCardElClick}
         />
       ))}
     </CardsWrapper>

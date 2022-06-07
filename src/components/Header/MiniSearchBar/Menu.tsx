@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 
+import FlexBox from '@components/FlexBox';
 import { useHeaderDispatch } from '@contexts/HeaderProvider';
 
 export type MenuType = 'persons' | 'checkin' | 'checkout' | 'price' | 'none';
@@ -21,8 +22,10 @@ export default function Menu({ menu: { title, menuType } }: Props) {
   };
 
   return (
-    <button type="button" onClick={handleClickMiniSearchBar}>
-      <Typography variant="input2">{title}</Typography>
-    </button>
+    <FlexBox sx={{ height: 'inherit' }}>
+      <button type="button" onClick={handleClickMiniSearchBar}>
+        <Typography variant="input2">{title}</Typography>
+      </button>
+    </FlexBox>
   );
 }

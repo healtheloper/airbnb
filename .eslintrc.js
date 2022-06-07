@@ -28,12 +28,15 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // hooks의 의존성배열이 충분하지 않을때 강제로 의존성을 추가하는 규칙을 완화
     'react-hooks/exhaustive-deps': 'warn',
+    'react/jsx-props-no-spreading': 'warn', // props로 받은 것 바로 props로 넘기기 허용
     'react/jsx-filename-extension': [
       'warn',
       { extensions: ['ts', 'tsx', 'jsx'] },
     ],
     // React v17 부터는 React 를 import 하지 않아도 되어 off
     'react/react-in-jsx-scope': 'off',
+    // Calendar 의 기본 파라미터를 주기위한 옵션
+    '@typescript-eslint/no-empty-function': 'off',
     'import/order': [
       'error',
       {

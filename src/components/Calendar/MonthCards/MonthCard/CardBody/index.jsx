@@ -14,6 +14,7 @@ const BodyWrapper = styled.ul`
 const BodyElement = styled.li`
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const DayElement = styled.span`
@@ -26,7 +27,42 @@ const UnclickableDate = styled.span`
 
 const totalBodyElementLength = 49; // 7 * 7
 
-export default function CardBody({ months, today }) {
+export default function CardBody({
+  months,
+  calendarState,
+  calendarDispatch,
+  onCardElClick,
+}) {
+  const { today, checkin, checkout, checkoutHover } = calendarState;
+
+  const isCheckInDate = (year, month, date) => {
+    const myDate = new Date(year, month, date);
+    return checkin !== '' && myDate.getTime() === checkin.getTime();
+  };
+
+  const isCheckOutDate = (year, month, date) => {
+    const myDate = new Date(year, month, date);
+    return checkout !== '' && myDate.getTime() === checkout.getTime();
+  };
+
+  const isDateBetweenInOut = (year, month, date) => {
+    const myDate = new Date(year, month, date);
+    if (checkin === '') return false;
+    if (checkout !== '') {
+      return (
+        myDate.getTime() >= checkin.getTime() &&
+        myDate.getTime() <= checkout.getTime()
+      );
+    }
+    if (checkoutHover !== '') {
+      return (
+        myDate.getTime() >= checkin.getTime() &&
+        myDate.getTime() <= checkoutHover.getTime()
+      );
+    }
+    return false;
+  };
+
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const year = months.getFullYear();
   const monthIdx = months.getMonth();
@@ -67,7 +103,19 @@ export default function CardBody({ months, today }) {
       {filledBodyArray.map(bodyEl => {
         switch (getElementType(bodyEl)) {
           case 'CLICKABLE_NUM':
-            return <ClickableDate year={year} month={monthIdx} date={bodyEl} />;
+            return (
+              <ClickableDate
+                year={year}
+                month={monthIdx}
+                date={bodyEl}
+                isCheckInDate={isCheckInDate(year, monthIdx, bodyEl)}
+                isCheckOutDate={isCheckOutDate(year, monthIdx, bodyEl)}
+                isDateBetweenInOut={isDateBetweenInOut(year, monthIdx, bodyEl)}
+                calendarDispatch={calendarDispatch}
+                calendarState={calendarState}
+                onCardElClick={onCardElClick}
+              />
+            );
           case 'UNCLICKABLE_NUM':
             return (
               <BodyElement>
