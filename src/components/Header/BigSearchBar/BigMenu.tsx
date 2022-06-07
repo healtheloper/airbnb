@@ -5,6 +5,7 @@ import { useCalendarState, useCalendarDispatch } from 'react-carousel-calendar';
 import FlexBox from '@components/FlexBox';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import color from '@constants/color';
+import { usePersonDispatch, usePersonState } from '@contexts/PersonProvider';
 import { usePriceState, usePriceDispatch } from '@contexts/PriceProvider';
 
 export interface IBigMenu {
@@ -34,6 +35,10 @@ export default function BigMenu({
 
   const priceState = usePriceState();
   const priceDispatch = usePriceDispatch();
+
+  const personState = usePersonState();
+  const personDispatch = usePersonDispatch();
+
   let closeBtnVisibility = 'hidden';
   const { checkin, checkout } = calendarState;
 
@@ -48,6 +53,8 @@ export default function BigMenu({
       calendarDispatch({ type: 'CHECK_OUT_DELETE' });
     } else if (menuType === 'price') {
       priceDispatch({ type: 'SET_PRICE', min: 0, max: 0 });
+    } else if (menuType === 'persons') {
+      personDispatch({ type: 'SET_ZERO_PERSONS' });
     }
   };
 
@@ -89,6 +96,33 @@ export default function BigMenu({
         }
         return <Typography variant="input1">{placeholder}</Typography>;
       }
+      case 'persons': {
+        const { adult, child, baby } = personState;
+        if (adult !== 0) {
+          closeBtnVisibility = 'visible';
+          const guests = adult + child;
+          return (
+            <Box
+              sx={{
+                width: '6rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <Typography variant="input1">
+                {`게스트 ${guests}명 `}
+                {baby !== 0 && `유아 ${baby}명`}
+              </Typography>
+            </Box>
+          );
+        }
+        return (
+          <Box sx={{ width: '6rem' }}>
+            <Typography variant="input1">{placeholder}</Typography>
+          </Box>
+        );
+      }
       default:
         return <Typography variant="input1">{placeholder}</Typography>;
     }
@@ -125,7 +159,12 @@ export default function BigMenu({
         onClick={handleClickBigMenu}
       >
         <FlexBox jc="space-around" ai="center" sx={{ width: '100%' }}>
-          <FlexBox fd="column">
+          <FlexBox
+            fd="column"
+            sx={{
+              ...(menuType === 'persons' && { width: '80%' }),
+            }}
+          >
             <Typography variant="h6">{title}</Typography>
             {getMenuBody()}
           </FlexBox>
@@ -136,6 +175,7 @@ export default function BigMenu({
               backgroundColor: color.grey6,
               visibility: closeBtnVisibility,
               '&:hover': { backgroundColor: color.grey5 },
+              ...(menuType === 'persons' && { position: 'absolute' }),
             }}
             onClick={handleClickCloseBtn}
           >

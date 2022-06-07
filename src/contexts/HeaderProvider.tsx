@@ -15,8 +15,8 @@ type Action =
 type HeaderDispatch = Dispatch<Action>;
 
 const initHeaderState: HeaderState = {
-  menuType: 'persons',
-  isFocus: true,
+  menuType: 'none',
+  isFocus: false,
 };
 
 const HeaderStateContext = createContext<HeaderState | null>(null);

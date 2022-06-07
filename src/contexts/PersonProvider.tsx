@@ -14,7 +14,8 @@ export type PersonAction =
   | { type: 'PLUS_CHILD' }
   | { type: 'MINUS_CHILD' }
   | { type: 'PLUS_BABY' }
-  | { type: 'MINUS_BABY' };
+  | { type: 'MINUS_BABY' }
+  | { type: 'SET_ZERO_PERSONS' };
 
 type PersonDispatch = Dispatch<PersonAction>;
 
@@ -29,6 +30,8 @@ const PersonDispatchContext = createContext<PersonDispatch | null>(null);
 
 function reducer(state: PersonState, action: PersonAction): PersonState {
   switch (action.type) {
+    case 'SET_ZERO_PERSONS':
+      return initPersonState;
     case 'PLUS_ADULT':
       return {
         ...state,
