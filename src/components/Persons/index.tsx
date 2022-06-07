@@ -1,8 +1,7 @@
-import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
-import { Box, Typography, List, ListItem, IconButton } from '@mui/material';
+import { List } from '@mui/material';
 
-import FlexBox from '@components/FlexBox';
-import { PersonStringType, usePersonState } from '@contexts/PersonProvider';
+import Person from '@components/Persons/Person';
+import { PersonState, usePersonState } from '@contexts/PersonProvider';
 
 const listStyle = {
   display: 'flex',
@@ -12,66 +11,54 @@ const listStyle = {
   height: '100%',
 };
 
-const listItemStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-};
+const MIN_PERSON_COUNT = 0;
+const MIN_ADULT_WITH_CHILD_BABY = 1;
+const MAX_PERSON_COUNT = 8;
 
-type InfoType = {
-  title: string;
-  desc: string;
-};
-
-type PersonInfoType = {
-  [key in PersonStringType]: InfoType;
-};
-
-const personInfo: PersonInfoType = {
-  adult: {
-    title: '성인',
-    desc: '만 13세 이상',
-  },
-  child: {
-    title: '어린이',
-    desc: '만 2~12세',
-  },
-  baby: {
-    title: '유아',
-    desc: '만 2세 미만',
-  },
-};
-
-const renderPersonItem = (person: [string, number]) => {
-  const [personType, personCount] = person;
-  const type = personType as PersonStringType;
-  const { title, desc }: InfoType = personInfo[type];
-  const isLastElement = personType === 'baby';
-
-  return (
-    <ListItem key={personType} sx={listItemStyle} divider={!isLastElement}>
-      <Box>
-        <Typography variant="h5">{title}</Typography>
-        <Typography variant="input2">{desc}</Typography>
-      </Box>
-      <FlexBox ai="center" sx={{ gap: '0.5rem' }}>
-        <IconButton aria-label="한명 줄이기">
-          <RemoveCircleOutline />
-        </IconButton>
-        <Typography variant="h5">{personCount}</Typography>
-        <IconButton aria-label="한명 추가하기">
-          <AddCircleOutline />
-        </IconButton>
-      </FlexBox>
-    </ListItem>
+const getBtnClickableInfo = (personState: PersonState) => {
+  const sumChildBabyCount = Object.entries(personState).reduce(
+    (sum, nextPerson) => {
+      const [type, count] = nextPerson;
+      return type === 'adult' ? sum : sum + count;
+    },
+    0,
   );
+
+  const parsedPersonEntries = Object.entries(personState).map(person => {
+    const [personType, personCount] = person;
+
+    const add = personCount < MAX_PERSON_COUNT;
+    if (personType !== 'adult') {
+      const remove = personCount > MIN_PERSON_COUNT;
+      return [personType, { remove, add }];
+    }
+
+    // 성인은 아이, 유아가 한명이라도 있으면 0명이 될 수 없음
+    const remove =
+      sumChildBabyCount > 0
+        ? personCount > MIN_ADULT_WITH_CHILD_BABY
+        : personCount > MIN_PERSON_COUNT;
+
+    return [personType, { remove, add }];
+  });
+
+  return Object.fromEntries(parsedPersonEntries);
 };
 
 export default function Persons() {
   const personState = usePersonState();
   const persons: [string, number][] = Object.entries(personState);
+  const btnClickableInfo = getBtnClickableInfo(personState);
+
   return (
     <List sx={listStyle}>
-      {persons.map(person => renderPersonItem(person))}
+      {persons.map(person => (
+        <Person
+          key={person[0]}
+          person={person}
+          btnClickableInfo={btnClickableInfo}
+        />
+      ))}
     </List>
   );
 }

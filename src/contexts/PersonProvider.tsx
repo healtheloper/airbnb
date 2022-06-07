@@ -8,7 +8,7 @@ export interface PersonState {
   baby: number;
 }
 
-type Action =
+export type PersonAction =
   | { type: 'PLUS_ADULT' }
   | { type: 'MINUS_ADULT' }
   | { type: 'PLUS_CHILD' }
@@ -16,7 +16,7 @@ type Action =
   | { type: 'PLUS_BABY' }
   | { type: 'MINUS_BABY' };
 
-type PersonDispatch = Dispatch<Action>;
+type PersonDispatch = Dispatch<PersonAction>;
 
 const initPersonState: PersonState = {
   adult: 0,
@@ -27,12 +27,17 @@ const initPersonState: PersonState = {
 const PersonStateContext = createContext<PersonState | null>(null);
 const PersonDispatchContext = createContext<PersonDispatch | null>(null);
 
-function reducer(state: PersonState, action: Action): PersonState {
+function reducer(state: PersonState, action: PersonAction): PersonState {
   switch (action.type) {
     case 'PLUS_ADULT':
       return {
         ...state,
         adult: state.adult + 1,
+      };
+    case 'MINUS_ADULT':
+      return {
+        ...state,
+        adult: state.adult - 1,
       };
     case 'PLUS_CHILD':
       return {
@@ -40,11 +45,21 @@ function reducer(state: PersonState, action: Action): PersonState {
         adult: state.adult === 0 ? 1 : state.adult,
         child: state.child + 1,
       };
+    case 'MINUS_CHILD':
+      return {
+        ...state,
+        child: state.child - 1,
+      };
     case 'PLUS_BABY':
       return {
         ...state,
         adult: state.adult === 0 ? 1 : state.adult,
         baby: state.baby + 1,
+      };
+    case 'MINUS_BABY':
+      return {
+        ...state,
+        baby: state.baby - 1,
       };
     default:
       throw new Error('Unexpected action');
