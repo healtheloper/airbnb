@@ -1,15 +1,7 @@
 import { Divider } from '@mui/material';
-import React from 'react';
 
 import BigMenu, { IBigMenu } from '@components/Header/BigSearchBar/BigMenu';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
-
-type CheckInOut = Date | '';
-
-export interface CalendarState {
-  checkin: CheckInOut;
-  checkout: CheckInOut;
-}
 
 interface Props {
   changeMenuType: (menuType: MenuType) => void;

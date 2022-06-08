@@ -1,29 +1,16 @@
 import { Typography } from '@mui/material';
-import { useEffect, useRef } from 'react';
+import { useCalendarState } from 'react-carousel-calendar';
 
 import Graph from '@components/Chart/Graph';
 import Title from '@components/Chart/Title';
 import FlexBox from '@components/FlexBox';
 import color from '@constants/color';
-import { usePriceDispatch, usePriceState } from '@contexts/PriceProvider';
+import { usePriceState } from '@contexts/PriceProvider';
 import rooms from '@mocks/room';
 
-interface roomsProps {
-  uuid: number;
-  image: string;
-  city: string;
-  price: number;
-  capacity: number;
-  stars: number;
+export interface CanvasDataProps {
+  [key: number]: number;
 }
-
-const getPriceMinMax = (data: roomsProps[]) => {
-  const min = data.reduce((prev, cur) => (prev.price > cur.price ? cur : prev));
-
-  const max = data.reduce((prev, cur) => (prev.price > cur.price ? prev : cur));
-
-  return [min.price, max.price];
-};
 
 const getAveragePrice = (min: number, max: number) => {
   // min, max 를 받아서 그 안의 값만 평균구하기
@@ -41,17 +28,38 @@ const getAveragePrice = (min: number, max: number) => {
   return idx === 0 ? 0 : Math.floor(data / idx);
 };
 
+const calculateRangeCount = () => {
+  const normalDistributionValue = 100000;
+  const data = rooms.data
+    .map(room => room.price)
+    .sort((a, b) => a - b)
+    .filter(n => n !== 0);
+  let standard = normalDistributionValue;
+
+  const newPriceObj = data.reduce((prev: CanvasDataProps, cur: number) => {
+    if (cur > standard) {
+      standard += normalDistributionValue;
+    }
+    const newPrev = { ...prev };
+
+    if (!newPrev[standard]) {
+      newPrev[standard] = 0;
+    }
+
+    newPrev[standard] += 1;
+    return newPrev;
+  }, {});
+
+  return newPriceObj;
+};
+
 export default function Chart() {
   const priceState = usePriceState();
-  const priceDispatch = usePriceDispatch();
-  const initPrice = useRef({});
+  const calendarState = useCalendarState();
+  const accommodationData = calculateRangeCount();
+  const { checkin, checkout } = calendarState;
 
-  useEffect(() => {
-    const [min, max] = getPriceMinMax(rooms.data);
-    initPrice.current = { min, max };
-
-    priceDispatch({ type: 'SET_PRICE', min, max });
-  }, [priceDispatch]);
+  const isCheckDate = () => checkin !== '' && checkout !== '';
 
   return (
     <FlexBox
@@ -66,7 +74,13 @@ export default function Chart() {
       <FlexBox sx={{ position: 'relative' }} fd="column">
         <Typography sx={{ fontWeight: 700 }}>가격 범위</Typography>
         <Title priceState={priceState} getAveragePrice={getAveragePrice} />
-        <Graph priceState={priceState} initPrice={initPrice} />
+        {isCheckDate() && (
+          <Graph
+            minValue={priceState.initMin}
+            maxValue={priceState.initMax}
+            accommodationData={accommodationData}
+          />
+        )}
       </FlexBox>
     </FlexBox>
   );

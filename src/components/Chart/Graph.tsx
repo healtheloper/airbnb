@@ -2,9 +2,9 @@ import Slider, { SliderThumb } from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
 import React, { useState, useRef, useEffect } from 'react';
 
+import { CanvasDataProps } from '@components/Chart/index';
 import color from '@constants/color';
-import { PriceState, usePriceDispatch } from '@contexts/PriceProvider';
-import rooms from '@mocks/room';
+import { usePriceDispatch } from '@contexts/PriceProvider';
 
 /**
  * 전역변수
@@ -18,20 +18,16 @@ import rooms from '@mocks/room';
  */
 const CANVAS_WIDTH = 365;
 const CANVAS_HEIGHT = 100;
-const normalDistributionValue = 100000;
 const sliderInterval = 5;
 const gradientRatio = 0.01;
 
 const startPoint = { x: 0, y: CANVAS_HEIGHT };
 const endPoint = { x: CANVAS_WIDTH, y: CANVAS_HEIGHT };
 
-interface cavansDataProps {
-  [key: number]: number;
-}
-
-interface graphProps {
-  priceState: PriceState;
-  initPrice: any;
+interface GraphProps {
+  minValue: number;
+  maxValue: number;
+  accommodationData: CanvasDataProps;
 }
 
 type AirbnbThumbComponentProps = React.HTMLAttributes<unknown>;
@@ -58,6 +54,12 @@ const AirbnbSlider = styled(Slider)(() => ({
     width: 20,
     backgroundColor: '#fff',
     border: '1px solid black',
+    '&:hover': {
+      boxShadow: '0 0 0 8px rgba(58, 133, 137, 0.16)',
+    },
+    '&.Mui-active': {
+      boxShadow: '0 0 0 8px rgba(58, 133, 137, 0.16)',
+    },
     '& .airbnb-bar': {
       height: 6,
       width: 1,
@@ -90,16 +92,16 @@ const draw = (
   canvas: HTMLCanvasElement | null,
   min: number,
   max: number,
-  priceObj: cavansDataProps,
+  priceObj: CanvasDataProps,
 ) => {
-  if (!canvas) return;
+  if (!canvas || !priceObj) return;
   const ctx = canvas?.getContext('2d');
 
   if (ctx) {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     let pointX = startPoint.x;
-    let startCoords = { ...startPoint };
+    let prevCoords = { ...startPoint };
 
     const priceObjLength = Object.keys(priceObj).length;
     const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength + 1);
@@ -111,23 +113,23 @@ const draw = (
     Object.values(priceObj).forEach(data => {
       pointX += xInterval;
 
-      const coords = {
+      const currentCoords = {
         x: pointX,
         y: CANVAS_HEIGHT - Math.floor((data / maxRooms) * CANVAS_HEIGHT),
       };
 
-      const controlX = startCoords.x + xInterval / 2;
+      const controlX = prevCoords.x + xInterval / 2;
 
       ctx.bezierCurveTo(
         controlX,
-        startCoords.y,
+        prevCoords.y,
         controlX,
-        coords.y,
-        coords.x,
-        coords.y,
+        currentCoords.y,
+        currentCoords.x,
+        currentCoords.y,
       );
 
-      startCoords = { ...coords };
+      prevCoords = { ...currentCoords };
     });
 
     ctx.lineTo(endPoint.x, endPoint.y);
@@ -144,29 +146,11 @@ const draw = (
   }
 };
 
-const calculateRangeCount = () => {
-  const data = rooms.data
-    .map(room => room.price)
-    .sort((a, b) => a - b)
-    .filter(n => n !== 0);
-  let standard = normalDistributionValue;
-
-  return data.reduce((prev: cavansDataProps, cur: number) => {
-    if (cur > standard) {
-      standard += normalDistributionValue;
-    }
-    const newPrev = { ...prev };
-
-    if (!newPrev[standard]) {
-      newPrev[standard] = 0;
-    }
-
-    newPrev[standard] += 1;
-    return newPrev;
-  }, {});
-};
-
-export default function Graph({ priceState, initPrice }: graphProps) {
+export default function Graph({
+  minValue,
+  maxValue,
+  accommodationData,
+}: GraphProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [sliderValue, setSliderValue] = useState<number[]>([0, 100]);
   const priceDispatch = usePriceDispatch();
@@ -180,27 +164,21 @@ export default function Graph({ priceState, initPrice }: graphProps) {
       return;
     }
 
-    const percentage = Math.floor(
-      (initPrice.current.max - initPrice.current.min) / 100,
-    );
+    const percentage = Math.floor((maxValue - minValue) / 100);
+    const minPrice = minValue + Math.floor(percentage * sliderNewValue[0]);
+    const maxPrice = minValue + Math.floor(percentage * sliderNewValue[1]);
 
     if (activeThumb === 0) {
-      const minPrice =
-        initPrice.current.min + Math.floor(percentage * sliderValue[0]);
-
       setSliderValue([
         Math.min(sliderNewValue[0], sliderValue[1] - sliderInterval),
         sliderValue[1],
       ]);
       priceDispatch({
         type: 'MIN_PRICE',
-        min:
-          minPrice < initPrice.current.min ? initPrice.current.min : minPrice,
-        max: initPrice.current.max,
+        min: minPrice,
+        max: maxPrice,
       });
     } else {
-      const maxPrice =
-        initPrice.current.min + Math.floor(percentage * sliderValue[1]);
       setSliderValue([
         sliderValue[0],
         Math.max(sliderNewValue[1], sliderValue[0] + sliderInterval),
@@ -208,17 +186,12 @@ export default function Graph({ priceState, initPrice }: graphProps) {
 
       priceDispatch({
         type: 'MAX_PRICE',
-        min: initPrice.current.min,
+        min: minPrice,
         max: maxPrice,
       });
     }
 
-    draw(
-      canvasRef.current,
-      sliderValue[0],
-      sliderValue[1],
-      calculateRangeCount(),
-    );
+    draw(canvasRef.current, sliderValue[0], sliderValue[1], accommodationData);
   };
 
   useEffect(() => {
@@ -227,9 +200,10 @@ export default function Graph({ priceState, initPrice }: graphProps) {
     if (canvas) {
       canvas.width = CANVAS_WIDTH;
       canvas.height = CANVAS_HEIGHT;
-      draw(canvas, sliderValue[0], sliderValue[1], calculateRangeCount());
+
+      draw(canvas, sliderValue[0], sliderValue[1], accommodationData);
     }
-  }, [priceState]);
+  }, [accommodationData, sliderValue]);
 
   return (
     <>

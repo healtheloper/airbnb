@@ -1,12 +1,31 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { useCalendarState, useCalendarDispatch } from 'react-carousel-calendar';
 
 import FlexBox from '@components/FlexBox';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import color from '@constants/color';
 import { usePriceState, usePriceDispatch } from '@contexts/PriceProvider';
+import rooms from '@mocks/room';
 
+interface RoomsProps {
+  uuid: number;
+  image: string;
+  city: string;
+  price: number;
+  capacity: number;
+  stars: number;
+}
+
+const getPriceMinMax = (data: RoomsProps[]) => {
+  // 여기서 비동기 데이터를 받아 데이터 파싱
+  const min = data.reduce((prev, cur) => (prev.price > cur.price ? cur : prev));
+
+  const max = data.reduce((prev, cur) => (prev.price > cur.price ? prev : cur));
+
+  return [min.price, max.price];
+};
 export interface IBigMenu {
   menuType: MenuType;
   title: string;
@@ -31,11 +50,12 @@ export default function BigMenu({
 }: Props) {
   const calendarState = useCalendarState();
   const calendarDispatch = useCalendarDispatch();
+  const priceDispatch = usePriceDispatch();
 
   const priceState = usePriceState();
-  const priceDispatch = usePriceDispatch();
   let closeBtnVisibility = 'hidden';
   const { checkin, checkout } = calendarState;
+  const [min, max] = getPriceMinMax(rooms.data);
 
   const handleClickBigMenu = () => {
     changeMenuType(menuType);
@@ -47,7 +67,15 @@ export default function BigMenu({
     } else if (menuType === 'checkout') {
       calendarDispatch({ type: 'CHECK_OUT_DELETE' });
     } else if (menuType === 'price') {
-      priceDispatch({ type: 'SET_PRICE', min: 0, max: 0 });
+      calendarDispatch({ type: 'CHECK_IN_DELETE' });
+      calendarDispatch({ type: 'CHECK_OUT_DELETE' });
+      priceDispatch({
+        type: 'SET_PRICE',
+        initMin: 0,
+        initMax: 0,
+        min: 0,
+        max: 0,
+      });
     }
   };
 
@@ -67,6 +95,7 @@ export default function BigMenu({
       }
       case 'checkout': {
         const isExistCheckOut = checkout !== '' && typeof checkout !== 'string';
+
         if (isExistCheckOut) {
           closeBtnVisibility = 'visible';
           return (
@@ -78,7 +107,7 @@ export default function BigMenu({
         return <Typography variant="input1">{placeholder}</Typography>;
       }
       case 'price': {
-        if (priceState.min) {
+        if (checkin && checkout) {
           closeBtnVisibility = 'visible';
           return (
             <Typography variant="input1">
@@ -93,6 +122,19 @@ export default function BigMenu({
         return <Typography variant="input1">{placeholder}</Typography>;
     }
   };
+
+  useEffect(() => {
+    // 날짜를 선택했을때 요금 셋팅
+    if (checkin && checkout) {
+      priceDispatch({
+        type: 'SET_PRICE',
+        initMin: min,
+        initMax: max,
+        min,
+        max,
+      });
+    }
+  }, [priceDispatch, min, max, checkin, checkout]);
 
   return (
     <Box

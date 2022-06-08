@@ -1,6 +1,8 @@
 import React, { useReducer, useContext, createContext, Dispatch } from 'react';
 
 export interface PriceState {
+  initMin: number;
+  initMax: number;
   min: number;
   max: number;
 }
@@ -8,11 +10,19 @@ export interface PriceState {
 type Action =
   | { type: 'MIN_PRICE'; min: number; max: number }
   | { type: 'MAX_PRICE'; min: number; max: number }
-  | { type: 'SET_PRICE'; min: number; max: number };
+  | {
+      type: 'SET_PRICE';
+      initMin: number;
+      initMax: number;
+      min: number;
+      max: number;
+    };
 
 type PriceDispatch = Dispatch<Action>;
 
 const initPriceState: PriceState = {
+  initMin: 0,
+  initMax: 0,
   min: 0,
   max: 0,
 };
@@ -25,6 +35,8 @@ function reducer(state: PriceState, action: Action): PriceState {
     case 'SET_PRICE':
       return {
         ...state,
+        initMin: action.initMin,
+        initMax: action.initMax,
         min: action.min,
         max: action.max,
       };
