@@ -8,6 +8,7 @@ import Layout from '@components/Layout';
 import color from '@constants/color';
 import { HeaderProvider, useHeaderState } from '@contexts/HeaderProvider';
 import MainPage from '@pages/MainPage';
+import SearchResultPage from '@pages/SearchResultPage';
 
 function MyGlobalStyles() {
   const { isFocus } = useHeaderState();
@@ -49,6 +50,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<MainPage />} />
+                <Route path="rooms" element={<SearchResultPage />} />
               </Route>
             </Routes>
           </Router>
