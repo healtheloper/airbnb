@@ -1,6 +1,7 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { Fab } from '@mui/material';
 import { Calendar, CalendarProvider } from 'react-carousel-calendar';
+import { useNavigate } from 'react-router-dom';
 
 import Chart from '@components/Chart';
 import FlexBox from '@components/FlexBox';
@@ -16,6 +17,7 @@ import { PersonProvider } from '@contexts/PersonProvider';
 import { PriceProvider } from '@contexts/PriceProvider';
 
 export default function BigSearchBar() {
+  const navigate = useNavigate();
   const headerDispatch = useHeaderDispatch();
   const headerState = useHeaderState();
 
@@ -79,6 +81,10 @@ export default function BigSearchBar() {
               variant="extended"
               color="primary"
               sx={{ width: '6rem', mr: '1rem', position: 'absolute', right: 0 }}
+              onClick={() => {
+                headerDispatch({ type: 'BODY_CLICK' });
+                navigate('/rooms');
+              }}
             >
               <SearchIcon
                 sx={{

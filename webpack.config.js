@@ -1,9 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 
+const dotenv = require('dotenv');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+
+dotenv.config();
 
 const mode = process.env.NODE_ENV || 'development';
+const { KAKAO_MAP_KEY } = process.env;
+
 const PORT = 3000;
 
 module.exports = {
@@ -49,6 +55,10 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
+      env: process.env,
+    }),
+    new webpack.EnvironmentPlugin({
+      KAKAO_MAP_KEY,
     }),
   ],
   stats: 'errors-only',
