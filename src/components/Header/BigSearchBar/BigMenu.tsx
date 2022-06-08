@@ -20,11 +20,15 @@ interface RoomsProps {
 
 const getPriceMinMax = (data: RoomsProps[]) => {
   // 여기서 비동기 데이터를 받아 데이터 파싱
-  const min = data.reduce((prev, cur) => (prev.price > cur.price ? cur : prev));
+  const minData = data.reduce((prev, cur) =>
+    prev.price > cur.price ? cur : prev,
+  );
 
-  const max = data.reduce((prev, cur) => (prev.price > cur.price ? prev : cur));
+  const maxData = data.reduce((prev, cur) =>
+    prev.price > cur.price ? prev : cur,
+  );
 
-  return [min.price, max.price];
+  return [minData.price, maxData.price];
 };
 export interface IBigMenu {
   menuType: MenuType;
@@ -55,7 +59,7 @@ export default function BigMenu({
   const priceState = usePriceState();
   let closeBtnVisibility = 'hidden';
   const { checkin, checkout } = calendarState;
-  const [min, max] = getPriceMinMax(rooms.data);
+  const [minPrice, maxPrice] = getPriceMinMax(rooms.data);
 
   const handleClickBigMenu = () => {
     changeMenuType(menuType);
@@ -71,10 +75,10 @@ export default function BigMenu({
       calendarDispatch({ type: 'CHECK_OUT_DELETE' });
       priceDispatch({
         type: 'SET_PRICE',
-        initMin: 0,
-        initMax: 0,
-        min: 0,
-        max: 0,
+        initMinPrice: 0,
+        initMaxPrice: 0,
+        minPrice: 0,
+        maxPrice: 0,
       });
     }
   };
@@ -111,8 +115,8 @@ export default function BigMenu({
           closeBtnVisibility = 'visible';
           return (
             <Typography variant="input1">
-              {priceState.min.toLocaleString()} ~{' '}
-              {priceState.max.toLocaleString()}
+              {priceState.minPrice.toLocaleString()} ~{' '}
+              {priceState.maxPrice.toLocaleString()}
             </Typography>
           );
         }
@@ -128,13 +132,13 @@ export default function BigMenu({
     if (checkin && checkout) {
       priceDispatch({
         type: 'SET_PRICE',
-        initMin: min,
-        initMax: max,
-        min,
-        max,
+        initMinPrice: minPrice,
+        initMaxPrice: maxPrice,
+        minPrice,
+        maxPrice,
       });
     }
-  }, [priceDispatch, min, max, checkin, checkout]);
+  }, [priceDispatch, minPrice, maxPrice, checkin, checkout]);
 
   return (
     <Box

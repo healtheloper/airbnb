@@ -2,7 +2,7 @@ import Slider, { SliderThumb } from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
 import React, { useState, useRef, useEffect } from 'react';
 
-import { CanvasDataProps } from '@components/Chart/index';
+import { CanvasDataProps } from '@components/Chart';
 import color from '@constants/color';
 import { usePriceDispatch } from '@contexts/PriceProvider';
 
@@ -73,16 +73,16 @@ const AirbnbSlider = styled(Slider)(() => ({
 const fillArea = (
   ctx: CanvasRenderingContext2D,
   style: CanvasGradient,
-  min: number,
-  max: number,
+  minSlider: number,
+  maxSlider: number,
 ) => {
   style.addColorStop(0, color.bgColor);
 
-  style.addColorStop(min * gradientRatio, color.bgColor);
-  style.addColorStop(min * gradientRatio, color.black);
+  style.addColorStop(minSlider * gradientRatio, color.bgColor);
+  style.addColorStop(minSlider * gradientRatio, color.black);
 
-  style.addColorStop(max * gradientRatio, color.black);
-  style.addColorStop(max * gradientRatio, color.bgColor);
+  style.addColorStop(maxSlider * gradientRatio, color.black);
+  style.addColorStop(maxSlider * gradientRatio, color.bgColor);
   style.addColorStop(1, color.bgColor);
   ctx.fillStyle = style;
   ctx.fill();
@@ -90,60 +90,59 @@ const fillArea = (
 
 const draw = (
   canvas: HTMLCanvasElement | null,
-  min: number,
-  max: number,
+  minSlider: number,
+  maxSlider: number,
   priceObj: CanvasDataProps,
 ) => {
-  if (!canvas || !priceObj) return;
   const ctx = canvas?.getContext('2d');
 
-  if (ctx) {
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  if (!ctx || !priceObj) return;
 
-    let pointX = startPoint.x;
-    let prevCoords = { ...startPoint };
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    const priceObjLength = Object.keys(priceObj).length;
-    const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength + 1);
-    const maxRooms = Math.max(...Object.values(priceObj));
+  let pointX = startPoint.x;
+  let prevCoords = { ...startPoint };
 
-    ctx.beginPath();
-    ctx.moveTo(startPoint.x - xInterval, startPoint.y);
+  const priceObjLength = Object.keys(priceObj).length;
+  const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength + 1);
+  const maxRooms = Math.max(...Object.values(priceObj));
 
-    Object.values(priceObj).forEach(data => {
-      pointX += xInterval;
+  ctx.beginPath();
+  ctx.moveTo(startPoint.x - xInterval, startPoint.y);
 
-      const currentCoords = {
-        x: pointX,
-        y: CANVAS_HEIGHT - Math.floor((data / maxRooms) * CANVAS_HEIGHT),
-      };
+  Object.values(priceObj).forEach(data => {
+    pointX += xInterval;
 
-      const controlX = prevCoords.x + xInterval / 2;
+    const currentCoords = {
+      x: pointX,
+      y: CANVAS_HEIGHT - Math.floor((data / maxRooms) * CANVAS_HEIGHT),
+    };
 
-      ctx.bezierCurveTo(
-        controlX,
-        prevCoords.y,
-        controlX,
-        currentCoords.y,
-        currentCoords.x,
-        currentCoords.y,
-      );
+    const controlX = prevCoords.x + xInterval / 2;
 
-      prevCoords = { ...currentCoords };
-    });
-
-    ctx.lineTo(endPoint.x, endPoint.y);
-
-    const linearGardaradientStyle = ctx.createLinearGradient(
-      startPoint.x,
-      startPoint.y,
-      endPoint.x,
-      endPoint.y,
+    ctx.bezierCurveTo(
+      controlX,
+      prevCoords.y,
+      controlX,
+      currentCoords.y,
+      currentCoords.x,
+      currentCoords.y,
     );
-    fillArea(ctx, linearGardaradientStyle, min, max);
 
-    ctx.closePath();
-  }
+    prevCoords = { ...currentCoords };
+  });
+
+  ctx.lineTo(endPoint.x, endPoint.y);
+
+  const linearGardaradientStyle = ctx.createLinearGradient(
+    startPoint.x,
+    startPoint.y,
+    endPoint.x,
+    endPoint.y,
+  );
+  fillArea(ctx, linearGardaradientStyle, minSlider, maxSlider);
+
+  ctx.closePath();
 };
 
 export default function Graph({
@@ -175,8 +174,8 @@ export default function Graph({
       ]);
       priceDispatch({
         type: 'MIN_PRICE',
-        min: minPrice,
-        max: maxPrice,
+        minPrice,
+        maxPrice,
       });
     } else {
       setSliderValue([
@@ -186,8 +185,8 @@ export default function Graph({
 
       priceDispatch({
         type: 'MAX_PRICE',
-        min: minPrice,
-        max: maxPrice,
+        minPrice,
+        maxPrice,
       });
     }
 
