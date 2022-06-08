@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["DOM", "es2017"],
+    "lib": ["DOM", "esnext"],
     "module": "commonjs",
     "allowJs": true,
     "jsx": "react-jsx",
