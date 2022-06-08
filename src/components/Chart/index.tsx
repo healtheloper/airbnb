@@ -76,8 +76,7 @@ export default function Chart() {
         <Title priceState={priceState} getAveragePrice={getAveragePrice} />
         {isCheckDate() && (
           <Graph
-            minValue={priceState.initMinPrice}
-            maxValue={priceState.initMaxPrice}
+            priceState={priceState}
             accommodationData={accommodationData}
           />
         )}

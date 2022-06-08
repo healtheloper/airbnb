@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 import { CanvasDataProps } from '@components/Chart';
 import color from '@constants/color';
-import { usePriceDispatch } from '@contexts/PriceProvider';
+import { PriceState, usePriceDispatch } from '@contexts/PriceProvider';
 
 /**
  * 전역변수
@@ -25,8 +25,7 @@ const startPoint = { x: 0, y: CANVAS_HEIGHT };
 const endPoint = { x: CANVAS_WIDTH, y: CANVAS_HEIGHT };
 
 interface GraphProps {
-  minValue: number;
-  maxValue: number;
+  priceState: PriceState;
   accommodationData: CanvasDataProps;
 }
 
@@ -108,7 +107,7 @@ const draw = (
   const maxRooms = Math.max(...Object.values(priceObj));
 
   ctx.beginPath();
-  ctx.moveTo(startPoint.x - xInterval, startPoint.y);
+  ctx.moveTo(startPoint.x, startPoint.y);
 
   Object.values(priceObj).forEach(data => {
     pointX += xInterval;
@@ -145,14 +144,15 @@ const draw = (
   ctx.closePath();
 };
 
-export default function Graph({
-  minValue,
-  maxValue,
-  accommodationData,
-}: GraphProps) {
+export default function Graph({ priceState, accommodationData }: GraphProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [sliderValue, setSliderValue] = useState<number[]>([0, 100]);
+  const percentage = Math.floor(priceState.initMaxPrice / 100);
   const priceDispatch = usePriceDispatch();
+
+  const [sliderValue, setSliderValue] = useState<number[]>([
+    Math.floor(priceState.minPrice / percentage),
+    Math.floor(priceState.maxPrice / percentage),
+  ]);
 
   const handleSlider = (
     event: Event,
@@ -163,9 +163,8 @@ export default function Graph({
       return;
     }
 
-    const percentage = Math.floor((maxValue - minValue) / 100);
-    const minPrice = minValue + Math.floor(percentage * sliderNewValue[0]);
-    const maxPrice = minValue + Math.floor(percentage * sliderNewValue[1]);
+    const minPrice = Math.floor(percentage * sliderNewValue[0]);
+    const maxPrice = Math.floor(percentage * sliderNewValue[1]);
 
     if (activeThumb === 0) {
       setSliderValue([
@@ -199,7 +198,6 @@ export default function Graph({
     if (canvas) {
       canvas.width = CANVAS_WIDTH;
       canvas.height = CANVAS_HEIGHT;
-
       draw(canvas, sliderValue[0], sliderValue[1], accommodationData);
     }
   }, [accommodationData, sliderValue]);
