@@ -1,4 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
+import moment from 'moment';
 
 import Room from '@components/SearchResult/Room';
 
@@ -21,24 +22,33 @@ interface RoomsProps {
 }
 
 export default function Rooms({ roomList, searchDataList }: RoomsProps) {
+  const {
+    check_in: checkIn,
+    check_out: checkOut,
+    price_min: minPrice,
+    price_max: maxPrice,
+    adult,
+    child,
+    baby,
+  } = searchDataList;
+
+  const getGuestNum = () => adult + child + baby;
+
   const getTitle = () => {
     const roomCount = Math.floor(roomList.totalElements / 100) * 100;
-    const {
-      check_in: checkIn,
-      check_out: checkOut,
-      price_min: minPrice,
-      price_max: maxPrice,
-      adult,
-      child,
-      baby,
-    } = searchDataList;
-    const guest = adult + child + baby;
-    return `${roomCount}개 이상의 숙소 ${checkIn} ~ ${checkOut} ₩${minPrice} ~ ₩${maxPrice} 게스트${guest}명`;
+
+    const guest = getGuestNum();
+
+    return `${roomCount}개 이상의 숙소 ${moment(checkIn).format(
+      'M월 D일',
+    )} ~ ${moment(checkOut).format(
+      'M월 D일',
+    )} ₩${minPrice.toLocaleString()} ~ ₩${maxPrice.toLocaleString()} 게스트${guest}명`;
   };
 
   return (
     <Stack spacing={2} sx={{ padding: '1rem' }}>
-      <Box>
+      <Box sx={{ padding: '1rem' }}>
         <Typography variant="input1">{getTitle()}</Typography>
         <Typography
           variant="h2"
@@ -49,7 +59,13 @@ export default function Rooms({ roomList, searchDataList }: RoomsProps) {
       </Box>
       {roomList.content &&
         roomList.content.map((room: any, idx: number) => (
-          <Room key={`room-${idx + 1}`} room={room} />
+          <Room
+            key={`room-${idx + 1}`}
+            room={room}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            guest={getGuestNum()}
+          />
         ))}
     </Stack>
   );

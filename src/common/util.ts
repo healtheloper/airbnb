@@ -16,3 +16,6 @@ export const delay = (ms: number) =>
       resolve(true);
     }, ms);
   });
+
+export const differenceDate = (checkIn: string, checkOut: string) =>
+  new Date(checkOut).getDate() - new Date(checkIn).getDate();
