@@ -35,7 +35,7 @@ export default function RoomModal({
   roomDetailData,
 }: RoomModalProps) {
   return (
-    <Modal open={open} onClose={() => setOpen(false)}>
+    <Modal open={open} onClose={() => setOpen(false)} disableScrollLock>
       <FlexBox sx={modalStyle} fd="column">
         <Box sx={{ marginBottom: '1.5rem' }}>
           <FlexBox jc="space-between">
