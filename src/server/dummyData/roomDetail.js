@@ -2,23 +2,23 @@ const roomDetailList = [
   {
     data: {
       id: 61,
-      title: '주식회사 유 호텔',
+      title: '유한회사 송이이 민박',
       imageUrls: [
-        'http://tong.visitkorea.or.kr/cms/resource/44/2592444_image2_1.jpg',
+        'http://tong.visitkorea.or.kr/cms/resource/83/1843083_image2_1.jpg',
       ],
-      address: 'Sinhyeon강원도 가평군 개포로 (현우이김리)',
-      hostName: '조진호',
+      address: 'Hongseong충청남도 성남시 강남대거리',
+      hostName: '최정자',
       hostImageUrl:
-        'https://i.picsum.photos/id/875/50/50.jpg?hmac=sK39wgxWb6nNcfqn4yy5CKa6cJxQvItu9FJI27rx8Ec',
-      headCountCapacity: 8,
+        'https://i.picsum.photos/id/440/50/50.jpg?hmac=w_6InceAcZY4Z3EmHus0JpoazjTEcfbeben7UHGcqBI',
+      headCountCapacity: 7,
       bedCount: 3,
-      bedroomCount: 2,
-      bathroomCount: 2,
+      bedroomCount: 1,
+      bathroomCount: 1,
       description:
-        'Optio distinctio quis sed sed. Dolorum voluptatibus distinctio voluptate nesciunt repudiandae animi.',
-      dailyPrice: 841100,
-      reviewCount: 44,
-      ratingStarScore: 3.58,
+        'Velit cum aliquid impedit voluptatibus voluptate. Temporibus ut veritatis.',
+      dailyPrice: 237800,
+      reviewCount: 119,
+      ratingStarScore: 1.47,
       checkWish: false,
       hasAllInfoPrice: false,
       detailPrice: {
