@@ -164,7 +164,9 @@ export default function Graph({ priceState, accommodationData }: GraphProps) {
     }
 
     const minPrice = Math.floor(percentage * sliderNewValue[0]);
-    const maxPrice = Math.floor(percentage * sliderNewValue[1]);
+    let maxPrice = Math.floor(percentage * sliderNewValue[1]);
+
+    if (minPrice === maxPrice) maxPrice += percentage * sliderInterval;
 
     if (activeThumb === 0) {
       setSliderValue([
