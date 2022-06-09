@@ -7,16 +7,28 @@ export default function UserInfo() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleUserInfoClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleLoginClick = () => {
+    const loginBaseUrl = 'https://github.com/login/oauth/authorize';
+    const clientId = process.env.GITHUB_CLIENT_ID;
+
+    if (!clientId) throw Error('Github login client id not found');
+
+    const githubLoginConfig = {
+      client_id: clientId,
+    };
+    const params = new URLSearchParams(githubLoginConfig).toString();
+    window.location.href = `${loginBaseUrl}?${params}`;
+  };
 
   return (
     <div>
-      <Fab variant="extended" color="info" onClick={handleClick}>
+      <Fab variant="extended" color="info" onClick={handleUserInfoClick}>
         <MenuIcon />
         <PersonIcon />
       </Fab>
@@ -42,7 +54,7 @@ export default function UserInfo() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>로그인</MenuItem>
+        <MenuItem onClick={handleLoginClick}>로그인</MenuItem>
       </Menu>
     </div>
   );
