@@ -1,23 +1,26 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Loading from '@components/Loading';
-import useFetch from '@hooks/useFetch';
+import { useHeaderDispatch } from '@contexts/HeaderProvider';
+import useFetch, { ResponseState } from '@hooks/useFetch';
 
 export default function OAuthCallback() {
+  const navigate = useNavigate();
+  const headerDispatch = useHeaderDispatch();
   const searchParams = new URLSearchParams(window.location.search);
   const code = searchParams.get('code');
-  const clientId = process.env.GITHUB_CLIENT_ID;
-  const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+  const fetchUrl = `https://github-oauth-park.herokuapp.com/api/githubLogin?code=${code}`;
+  const { isLoading, data }: ResponseState<{ avatarUrl: string }> =
+    useFetch(fetchUrl);
 
-  const body = JSON.stringify({
-    code,
-    clientId,
-    clientSecret,
-  });
-  const fetchOptions = {
-    method: 'POST',
-    body,
-  };
-  const { data } = useFetch(`/api/githubLogin`, fetchOptions);
-  console.log(data);
+  useEffect(() => {
+    if (!isLoading && data) {
+      headerDispatch({ type: 'LOGIN' });
+      localStorage.setItem('avatarUrl', data.avatarUrl);
+      navigate('/');
+    }
+  }, [data]);
 
   return <Loading />;
 }
