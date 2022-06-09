@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { theme } from '@common/theme';
 import Layout from '@components/Layout';
+import OAuthCallback from '@components/OAuthCallback';
 import color from '@constants/color';
 import { HeaderProvider, useHeaderState } from '@contexts/HeaderProvider';
 import MainPage from '@pages/MainPage';
@@ -50,6 +51,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<MainPage />} />
+                <Route path="callback" element={<OAuthCallback />} />
                 <Route path="rooms" element={<SearchResultPage />} />
               </Route>
             </Routes>

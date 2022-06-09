@@ -3,6 +3,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import { Fab, Menu, Fade, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
 
+import { getParamsFormat } from '@common/util';
+
 export default function UserInfo() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -16,14 +18,18 @@ export default function UserInfo() {
   const handleLoginClick = () => {
     const loginBaseUrl = 'https://github.com/login/oauth/authorize';
     const clientId = process.env.GITHUB_CLIENT_ID;
-
+    const redirectUri =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000/callback'
+        : 'https://puffinbnb.netlify.app/callback';
     if (!clientId) throw Error('Github login client id not found');
 
     const githubLoginConfig = {
       client_id: clientId,
+      redirect_uri: redirectUri,
     };
-    const params = new URLSearchParams(githubLoginConfig).toString();
-    window.location.href = `${loginBaseUrl}?${params}`;
+    const params = getParamsFormat(githubLoginConfig);
+    window.location.href = `${loginBaseUrl}${params}`;
   };
 
   return (
