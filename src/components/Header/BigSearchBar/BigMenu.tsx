@@ -1,12 +1,36 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Typography } from '@mui/material';
+import { useEffect } from 'react';
+import { useCalendarState, useCalendarDispatch } from 'react-carousel-calendar';
 
 import FlexBox from '@components/FlexBox';
-import { CalendarState } from '@components/Header/BigSearchBar/BigMenus';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import color from '@constants/color';
+import { usePersonDispatch, usePersonState } from '@contexts/PersonProvider';
 import { usePriceState, usePriceDispatch } from '@contexts/PriceProvider';
+import rooms from '@mocks/room';
 
+interface RoomsProps {
+  uuid: number;
+  image: string;
+  city: string;
+  price: number;
+  capacity: number;
+  stars: number;
+}
+
+const getPriceMinMax = (data: RoomsProps[]) => {
+  // 여기서 비동기 데이터를 받아 데이터 파싱
+  const minData = data.reduce((prev, cur) =>
+    prev.price > cur.price ? cur : prev,
+  );
+
+  const maxData = data.reduce((prev, cur) =>
+    prev.price > cur.price ? prev : cur,
+  );
+
+  return [minData.price, maxData.price];
+};
 export interface IBigMenu {
   menuType: MenuType;
   title: string;
@@ -18,8 +42,6 @@ interface Props {
   width: string;
   isSelectedType: boolean;
   changeMenuType: (menuType: MenuType) => void;
-  calendarState: CalendarState;
-  calendarDispatch: (param: object) => void;
 }
 
 const getMonthDateString = (date: Date) =>
@@ -30,13 +52,19 @@ export default function BigMenu({
   width,
   isSelectedType,
   changeMenuType,
-  calendarState,
-  calendarDispatch,
 }: Props) {
-  const priceState = usePriceState();
+  const calendarState = useCalendarState();
+  const calendarDispatch = useCalendarDispatch();
   const priceDispatch = usePriceDispatch();
+
+  const priceState = usePriceState();
+
+  const personState = usePersonState();
+  const personDispatch = usePersonDispatch();
+
   let closeBtnVisibility = 'hidden';
   const { checkin, checkout } = calendarState;
+  const [minPrice, maxPrice] = getPriceMinMax(rooms.data);
 
   const handleClickBigMenu = () => {
     changeMenuType(menuType);
@@ -48,14 +76,24 @@ export default function BigMenu({
     } else if (menuType === 'checkout') {
       calendarDispatch({ type: 'CHECK_OUT_DELETE' });
     } else if (menuType === 'price') {
-      priceDispatch({ type: 'SET_PRICE', min: 0, max: 0 });
+      calendarDispatch({ type: 'CHECK_IN_DELETE' });
+      calendarDispatch({ type: 'CHECK_OUT_DELETE' });
+      priceDispatch({
+        type: 'SET_PRICE',
+        initMinPrice: 0,
+        initMaxPrice: 0,
+        minPrice: 0,
+        maxPrice: 0,
+      });
+    } else if (menuType === 'persons') {
+      personDispatch({ type: 'SET_ZERO_PERSONS' });
     }
   };
 
   const getMenuBody = () => {
     switch (menuType) {
       case 'checkin': {
-        const isExistCheckIn = checkin !== '';
+        const isExistCheckIn = checkin !== '' && typeof checkin !== 'string';
         if (isExistCheckIn) {
           closeBtnVisibility = 'visible';
           return (
@@ -67,7 +105,8 @@ export default function BigMenu({
         return <Typography variant="input1">{placeholder}</Typography>;
       }
       case 'checkout': {
-        const isExistCheckOut = checkout !== '';
+        const isExistCheckOut = checkout !== '' && typeof checkout !== 'string';
+
         if (isExistCheckOut) {
           closeBtnVisibility = 'visible';
           return (
@@ -79,21 +118,61 @@ export default function BigMenu({
         return <Typography variant="input1">{placeholder}</Typography>;
       }
       case 'price': {
-        if (priceState.min) {
+        if (checkin && checkout) {
           closeBtnVisibility = 'visible';
           return (
             <Typography variant="input1">
-              {priceState.min.toLocaleString()} ~{' '}
-              {priceState.max.toLocaleString()}
+              {priceState.minPrice.toLocaleString()} ~{' '}
+              {priceState.maxPrice.toLocaleString()}
             </Typography>
           );
         }
         return <Typography variant="input1">{placeholder}</Typography>;
       }
+      case 'persons': {
+        const { adult, child, baby } = personState;
+        if (adult !== 0) {
+          closeBtnVisibility = 'visible';
+          const guests = adult + child;
+          return (
+            <Box
+              sx={{
+                width: '6rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <Typography variant="input1">
+                {`게스트 ${guests}명 `}
+                {baby !== 0 && `유아 ${baby}명`}
+              </Typography>
+            </Box>
+          );
+        }
+        return (
+          <Box sx={{ width: '6rem' }}>
+            <Typography variant="input1">{placeholder}</Typography>
+          </Box>
+        );
+      }
       default:
         return <Typography variant="input1">{placeholder}</Typography>;
     }
   };
+
+  useEffect(() => {
+    // 날짜를 선택했을때 요금 셋팅
+    if (checkin && checkout) {
+      priceDispatch({
+        type: 'SET_PRICE',
+        initMinPrice: minPrice,
+        initMaxPrice: maxPrice,
+        minPrice,
+        maxPrice,
+      });
+    }
+  }, [priceDispatch, minPrice, maxPrice, checkin, checkout]);
 
   return (
     <Box
@@ -126,7 +205,12 @@ export default function BigMenu({
         onClick={handleClickBigMenu}
       >
         <FlexBox jc="space-around" ai="center" sx={{ width: '100%' }}>
-          <FlexBox fd="column">
+          <FlexBox
+            fd="column"
+            sx={{
+              ...(menuType === 'persons' && { width: '80%' }),
+            }}
+          >
             <Typography variant="h6">{title}</Typography>
             {getMenuBody()}
           </FlexBox>
@@ -137,6 +221,7 @@ export default function BigMenu({
               backgroundColor: color.grey6,
               visibility: closeBtnVisibility,
               '&:hover': { backgroundColor: color.grey5 },
+              ...(menuType === 'persons' && { position: 'absolute' }),
             }}
             onClick={handleClickCloseBtn}
           >

@@ -42,6 +42,7 @@ export default function Header() {
           top: 0,
           left: 0,
           right: 0,
+          zIndex: 3,
         }}
       >
         <Container maxWidth="lg">

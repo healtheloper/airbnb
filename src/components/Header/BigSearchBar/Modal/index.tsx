@@ -39,6 +39,7 @@ export default function Modal({ children }: ModalProps) {
       sx={{
         position: 'absolute',
         borderRadius: '3rem',
+        padding: '3rem',
         right: 0,
         top: '6rem',
         width,

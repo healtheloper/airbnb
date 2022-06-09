@@ -1,19 +1,9 @@
 import { Divider } from '@mui/material';
-import React from 'react';
 
 import BigMenu, { IBigMenu } from '@components/Header/BigSearchBar/BigMenu';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 
-type CheckInOut = Date | '';
-
-export interface CalendarState {
-  checkin: CheckInOut;
-  checkout: CheckInOut;
-}
-
 interface Props {
-  calendarState: CalendarState;
-  calendarDispatch: () => void;
   changeMenuType: (menuType: MenuType) => void;
   isSelectedType: (menuType: MenuType) => boolean;
 }
@@ -27,12 +17,7 @@ const menus: IBigMenu[] = [
 
 const menuWidthsOrder = ['20%', '20%', '25%', '35%'];
 
-export default function BigMenus({
-  calendarState,
-  calendarDispatch,
-  changeMenuType,
-  isSelectedType,
-}: Props) {
+export default function BigMenus({ changeMenuType, isSelectedType }: Props) {
   return (
     <>
       {menus.reduce(
@@ -44,8 +29,6 @@ export default function BigMenus({
               width={menuWidthsOrder[idx]}
               isSelectedType={isSelectedType(menu.menuType)}
               changeMenuType={changeMenuType}
-              calendarState={calendarState}
-              calendarDispatch={calendarDispatch}
             />
             {idx + 1 !== menus.length && (
               <Divider orientation="vertical" flexItem />

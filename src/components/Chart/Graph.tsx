@@ -2,9 +2,9 @@ import Slider, { SliderThumb } from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
 import React, { useState, useRef, useEffect } from 'react';
 
+import { CanvasDataProps } from '@components/Chart';
 import color from '@constants/color';
 import { PriceState, usePriceDispatch } from '@contexts/PriceProvider';
-import rooms from '@mocks/room';
 
 /**
  * 전역변수
@@ -18,20 +18,15 @@ import rooms from '@mocks/room';
  */
 const CANVAS_WIDTH = 365;
 const CANVAS_HEIGHT = 100;
-const normalDistributionValue = 100000;
 const sliderInterval = 5;
 const gradientRatio = 0.01;
 
 const startPoint = { x: 0, y: CANVAS_HEIGHT };
 const endPoint = { x: CANVAS_WIDTH, y: CANVAS_HEIGHT };
 
-interface cavansDataProps {
-  [key: number]: number;
-}
-
-interface graphProps {
+interface GraphProps {
   priceState: PriceState;
-  initPrice: any;
+  accommodationData: CanvasDataProps;
 }
 
 type AirbnbThumbComponentProps = React.HTMLAttributes<unknown>;
@@ -58,6 +53,12 @@ const AirbnbSlider = styled(Slider)(() => ({
     width: 20,
     backgroundColor: '#fff',
     border: '1px solid black',
+    '&:hover': {
+      boxShadow: '0 0 0 8px rgba(58, 133, 137, 0.16)',
+    },
+    '&.Mui-active': {
+      boxShadow: '0 0 0 8px rgba(58, 133, 137, 0.16)',
+    },
     '& .airbnb-bar': {
       height: 6,
       width: 1,
@@ -71,16 +72,16 @@ const AirbnbSlider = styled(Slider)(() => ({
 const fillArea = (
   ctx: CanvasRenderingContext2D,
   style: CanvasGradient,
-  min: number,
-  max: number,
+  minSlider: number,
+  maxSlider: number,
 ) => {
   style.addColorStop(0, color.bgColor);
 
-  style.addColorStop(min * gradientRatio, color.bgColor);
-  style.addColorStop(min * gradientRatio, color.black);
+  style.addColorStop(minSlider * gradientRatio, color.bgColor);
+  style.addColorStop(minSlider * gradientRatio, color.black);
 
-  style.addColorStop(max * gradientRatio, color.black);
-  style.addColorStop(max * gradientRatio, color.bgColor);
+  style.addColorStop(maxSlider * gradientRatio, color.black);
+  style.addColorStop(maxSlider * gradientRatio, color.bgColor);
   style.addColorStop(1, color.bgColor);
   ctx.fillStyle = style;
   ctx.fill();
@@ -88,88 +89,70 @@ const fillArea = (
 
 const draw = (
   canvas: HTMLCanvasElement | null,
-  min: number,
-  max: number,
-  priceObj: cavansDataProps,
+  minSlider: number,
+  maxSlider: number,
+  priceObj: CanvasDataProps,
 ) => {
-  if (!canvas) return;
   const ctx = canvas?.getContext('2d');
 
-  if (ctx) {
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  if (!ctx || !priceObj) return;
 
-    let pointX = startPoint.x;
-    let startCoords = { ...startPoint };
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    const priceObjLength = Object.keys(priceObj).length;
-    const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength + 1);
-    const maxRooms = Math.max(...Object.values(priceObj));
+  let pointX = startPoint.x;
+  let prevCoords = { ...startPoint };
 
-    ctx.beginPath();
-    ctx.moveTo(startPoint.x - xInterval, startPoint.y);
+  const priceObjLength = Object.keys(priceObj).length;
+  const xInterval = Math.floor(CANVAS_WIDTH / priceObjLength + 1);
+  const maxRooms = Math.max(...Object.values(priceObj));
 
-    Object.values(priceObj).forEach(data => {
-      pointX += xInterval;
+  ctx.beginPath();
+  ctx.moveTo(startPoint.x, startPoint.y);
 
-      const coords = {
-        x: pointX,
-        y: CANVAS_HEIGHT - Math.floor((data / maxRooms) * CANVAS_HEIGHT),
-      };
+  Object.values(priceObj).forEach(data => {
+    pointX += xInterval;
 
-      const controlX = startCoords.x + xInterval / 2;
+    const currentCoords = {
+      x: pointX,
+      y: CANVAS_HEIGHT - Math.floor((data / maxRooms) * CANVAS_HEIGHT),
+    };
 
-      ctx.bezierCurveTo(
-        controlX,
-        startCoords.y,
-        controlX,
-        coords.y,
-        coords.x,
-        coords.y,
-      );
+    const controlX = prevCoords.x + xInterval / 2;
 
-      startCoords = { ...coords };
-    });
-
-    ctx.lineTo(endPoint.x, endPoint.y);
-
-    const linearGardaradientStyle = ctx.createLinearGradient(
-      startPoint.x,
-      startPoint.y,
-      endPoint.x,
-      endPoint.y,
+    ctx.bezierCurveTo(
+      controlX,
+      prevCoords.y,
+      controlX,
+      currentCoords.y,
+      currentCoords.x,
+      currentCoords.y,
     );
-    fillArea(ctx, linearGardaradientStyle, min, max);
 
-    ctx.closePath();
-  }
+    prevCoords = { ...currentCoords };
+  });
+
+  ctx.lineTo(endPoint.x, endPoint.y);
+
+  const linearGardaradientStyle = ctx.createLinearGradient(
+    startPoint.x,
+    startPoint.y,
+    endPoint.x,
+    endPoint.y,
+  );
+  fillArea(ctx, linearGardaradientStyle, minSlider, maxSlider);
+
+  ctx.closePath();
 };
 
-const calculateRangeCount = () => {
-  const data = rooms.data
-    .map(room => room.price)
-    .sort((a, b) => a - b)
-    .filter(n => n !== 0);
-  let standard = normalDistributionValue;
-
-  return data.reduce((prev: cavansDataProps, cur: number) => {
-    if (cur > standard) {
-      standard += normalDistributionValue;
-    }
-    const newPrev = { ...prev };
-
-    if (!newPrev[standard]) {
-      newPrev[standard] = 0;
-    }
-
-    newPrev[standard] += 1;
-    return newPrev;
-  }, {});
-};
-
-export default function Graph({ priceState, initPrice }: graphProps) {
+export default function Graph({ priceState, accommodationData }: GraphProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [sliderValue, setSliderValue] = useState<number[]>([0, 100]);
+  const percentage = Math.floor(priceState.initMaxPrice / 100);
   const priceDispatch = usePriceDispatch();
+
+  const [sliderValue, setSliderValue] = useState<number[]>([
+    Math.floor(priceState.minPrice / percentage),
+    Math.floor(priceState.maxPrice / percentage),
+  ]);
 
   const handleSlider = (
     event: Event,
@@ -180,27 +163,20 @@ export default function Graph({ priceState, initPrice }: graphProps) {
       return;
     }
 
-    const percentage = Math.floor(
-      (initPrice.current.max - initPrice.current.min) / 100,
-    );
+    const minPrice = Math.floor(percentage * sliderNewValue[0]);
+    const maxPrice = Math.floor(percentage * sliderNewValue[1]);
 
     if (activeThumb === 0) {
-      const minPrice =
-        initPrice.current.min + Math.floor(percentage * sliderValue[0]);
-
       setSliderValue([
         Math.min(sliderNewValue[0], sliderValue[1] - sliderInterval),
         sliderValue[1],
       ]);
       priceDispatch({
         type: 'MIN_PRICE',
-        min:
-          minPrice < initPrice.current.min ? initPrice.current.min : minPrice,
-        max: initPrice.current.max,
+        minPrice,
+        maxPrice,
       });
     } else {
-      const maxPrice =
-        initPrice.current.min + Math.floor(percentage * sliderValue[1]);
       setSliderValue([
         sliderValue[0],
         Math.max(sliderNewValue[1], sliderValue[0] + sliderInterval),
@@ -208,17 +184,12 @@ export default function Graph({ priceState, initPrice }: graphProps) {
 
       priceDispatch({
         type: 'MAX_PRICE',
-        min: initPrice.current.min,
-        max: maxPrice,
+        minPrice,
+        maxPrice,
       });
     }
 
-    draw(
-      canvasRef.current,
-      sliderValue[0],
-      sliderValue[1],
-      calculateRangeCount(),
-    );
+    draw(canvasRef.current, sliderValue[0], sliderValue[1], accommodationData);
   };
 
   useEffect(() => {
@@ -227,9 +198,9 @@ export default function Graph({ priceState, initPrice }: graphProps) {
     if (canvas) {
       canvas.width = CANVAS_WIDTH;
       canvas.height = CANVAS_HEIGHT;
-      draw(canvas, sliderValue[0], sliderValue[1], calculateRangeCount());
+      draw(canvas, sliderValue[0], sliderValue[1], accommodationData);
     }
-  }, [priceState]);
+  }, [accommodationData, sliderValue]);
 
   return (
     <>

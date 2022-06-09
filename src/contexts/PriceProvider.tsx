@@ -1,20 +1,30 @@
 import React, { useReducer, useContext, createContext, Dispatch } from 'react';
 
 export interface PriceState {
-  min: number;
-  max: number;
+  initMinPrice: number;
+  initMaxPrice: number;
+  minPrice: number;
+  maxPrice: number;
 }
 
 type Action =
-  | { type: 'MIN_PRICE'; min: number; max: number }
-  | { type: 'MAX_PRICE'; min: number; max: number }
-  | { type: 'SET_PRICE'; min: number; max: number };
+  | { type: 'MIN_PRICE'; minPrice: number; maxPrice: number }
+  | { type: 'MAX_PRICE'; minPrice: number; maxPrice: number }
+  | {
+      type: 'SET_PRICE';
+      initMinPrice: number;
+      initMaxPrice: number;
+      minPrice: number;
+      maxPrice: number;
+    };
 
 type PriceDispatch = Dispatch<Action>;
 
 const initPriceState: PriceState = {
-  min: 0,
-  max: 0,
+  initMinPrice: 0,
+  initMaxPrice: 0,
+  minPrice: 0,
+  maxPrice: 0,
 };
 
 const PriceStateContext = createContext<PriceState | null>(null);
@@ -25,20 +35,22 @@ function reducer(state: PriceState, action: Action): PriceState {
     case 'SET_PRICE':
       return {
         ...state,
-        min: action.min,
-        max: action.max,
+        initMinPrice: action.initMinPrice,
+        initMaxPrice: action.initMaxPrice,
+        minPrice: action.minPrice,
+        maxPrice: action.maxPrice,
       };
     case 'MIN_PRICE':
       return {
         ...state,
-        min: action.min,
-        max: action.max,
+        minPrice: action.minPrice,
+        maxPrice: action.maxPrice,
       };
     case 'MAX_PRICE':
       return {
         ...state,
-        min: action.min,
-        max: action.max,
+        minPrice: action.minPrice,
+        maxPrice: action.maxPrice,
       };
     default:
       throw new Error('Unexpected action');
