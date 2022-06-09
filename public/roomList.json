@@ -1,0 +1,171 @@
+{
+  "data": {
+    "content": [
+      {
+        "id": 61,
+        "title": "유한회사 송이이 민박",
+        "imageUrl": "http://tong.visitkorea.or.kr/cms/resource/83/1843083_image2_1.jpg",
+        "lat": 36.6009,
+        "lng": 126.665,
+        "dailyPrice": 237800,
+        "reviewCount": 119,
+        "ratingStarScore": 1.47,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 73,
+        "title": "주식회사 이황이 멘션",
+        "imageUrl": "http://tong.visitkorea.or.kr/cms/resource/39/1981439_image2_1.jpg",
+        "lat": 37.65639,
+        "lng": 126.835,
+        "dailyPrice": 119400,
+        "reviewCount": 449,
+        "ratingStarScore": 1.19,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 78,
+        "title": "김박 아파트",
+        "imageUrl": "http://tong.visitkorea.or.kr/cms/resource/73/2436173_image2_1.jpg",
+        "lat": 37.65639,
+        "lng": 126.835,
+        "dailyPrice": 227800,
+        "reviewCount": 144,
+        "ratingStarScore": 3.65,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 80,
+        "title": "이김안 민박",
+        "imageUrl": "http://tong.visitkorea.or.kr/cms/resource/78/1609978_image2_1.jpg",
+        "lat": 37.65639,
+        "lng": 126.835,
+        "dailyPrice": 130600,
+        "reviewCount": 255,
+        "ratingStarScore": 2.86,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 82,
+        "title": "이윤 도미토리",
+        "imageUrl": "http://tong.visitkorea.or.kr/cms/resource/99/1593599_image2_1.jpg",
+        "lat": 37.65639,
+        "lng": 126.835,
+        "dailyPrice": 508600,
+        "reviewCount": 447,
+        "ratingStarScore": 2.21,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 90,
+        "title": "장김 호텔",
+        "imageUrl": "http://tong.visitkorea.or.kr/cms/resource/12/2652012_image2_1.jpg",
+        "lat": 36.6009,
+        "lng": 126.665,
+        "dailyPrice": 441500,
+        "reviewCount": 435,
+        "ratingStarScore": 1.73,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 94,
+        "title": "한김 게스트하우스",
+        "imageUrl": null,
+        "lat": 36.6009,
+        "lng": 126.665,
+        "dailyPrice": 527400,
+        "reviewCount": 221,
+        "ratingStarScore": 2.88,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 99,
+        "title": "이고강 멘션",
+        "imageUrl": null,
+        "lat": 37.65639,
+        "lng": 126.835,
+        "dailyPrice": 597800,
+        "reviewCount": 139,
+        "ratingStarScore": 2.22,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 106,
+        "title": "김박오 모텔",
+        "imageUrl": null,
+        "lat": 37.65639,
+        "lng": 126.835,
+        "dailyPrice": 540900,
+        "reviewCount": 310,
+        "ratingStarScore": 2.38,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      },
+      {
+        "id": 109,
+        "title": "김이 도미토리",
+        "imageUrl": null,
+        "lat": 36.6009,
+        "lng": 126.665,
+        "dailyPrice": 574000,
+        "reviewCount": 34,
+        "ratingStarScore": 2.18,
+        "maximumNum": 4,
+        "bathroomCount": 2,
+        "bedCount": 4,
+        "bedroomCount": 2
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "empty": true,
+        "sorted": false,
+        "unsorted": true
+      },
+      "offset": 10,
+      "pageNumber": 1,
+      "pageSize": 10,
+      "paged": true,
+      "unpaged": false
+    },
+    "totalPages": 277,
+    "totalElements": 2766,
+    "last": false,
+    "number": 1,
+    "sort": {
+      "empty": true,
+      "sorted": false,
+      "unsorted": true
+    },
+    "size": 10,
+    "numberOfElements": 10,
+    "first": false,
+    "empty": false
+  }
+}
