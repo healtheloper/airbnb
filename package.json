@@ -26,6 +26,7 @@
     "core-js": "^3.22.6",
     "emotion-normalize": "^11.0.1",
     "lodash": "^4.17.21",
+    "msw": "^0.42.1",
     "react": "^18.1.0",
     "react-carousel-calendar": "^0.0.3",
     "react-dom": "^18.1.0",
@@ -54,5 +55,8 @@
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.9.0"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
