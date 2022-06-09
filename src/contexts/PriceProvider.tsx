@@ -8,6 +8,7 @@ export interface PriceState {
 }
 
 type Action =
+  | { type: 'SET_INIT_PRICE' }
   | { type: 'MIN_PRICE'; minPrice: number; maxPrice: number }
   | { type: 'MAX_PRICE'; minPrice: number; maxPrice: number }
   | {
@@ -32,6 +33,13 @@ const PriceDispatchContext = createContext<PriceDispatch | null>(null);
 
 function reducer(state: PriceState, action: Action): PriceState {
   switch (action.type) {
+    case 'SET_INIT_PRICE':
+      return {
+        initMinPrice: 0,
+        initMaxPrice: 0,
+        minPrice: 0,
+        maxPrice: 0,
+      };
     case 'SET_PRICE':
       return {
         ...state,
