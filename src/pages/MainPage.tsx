@@ -1,11 +1,11 @@
 import { Box, Container } from '@mui/material';
-import { useState, useEffect } from 'react';
 
 import Background from '@components/Background';
 import Footer from '@components/Footer';
 import CategoryLocations from '@components/Main/CategoryLocations';
 import NearLocations from '@components/Main/NearLocations';
 import SkeletonNearLocations from '@components/Main/SkeletonNearLocations';
+import useFetch, { ResponseState } from '@hooks/useFetch';
 
 export interface INearLocationsInfo {
   uuid: number;
@@ -25,38 +25,26 @@ export interface IMainPageDatas<T> {
   infos: T[];
 }
 
-export default function MainPage() {
-  const [nearLocations, setNearLocations] = useState<
-    IMainPageDatas<INearLocationsInfo>
-  >({
-    title: '',
-    infos: [],
-  });
-  const [categoryLocations, setCategoryLocations] = useState<
-    IMainPageDatas<ICategoryLocationsInfo>
-  >({
-    title: '',
-    infos: [],
-  });
+type NearLocationsResponse = ResponseState<IMainPageDatas<INearLocationsInfo>>;
 
-  useEffect(() => {
-    const fetchCategoryLocations = async () => {
-      fetch('/api/categoryLocations')
-        .then(res => res.json())
-        .then(data => {
-          setCategoryLocations(data);
-        });
-    };
-    const fetchNearLocations = async () => {
-      fetch('/api/nearLocations')
-        .then(res => res.json())
-        .then(data => {
-          setNearLocations(data);
-        });
-    };
-    fetchNearLocations();
-    fetchCategoryLocations();
-  }, []);
+type CategoryLocationsResponse = ResponseState<
+  IMainPageDatas<ICategoryLocationsInfo>
+>;
+
+export default function MainPage() {
+  const {
+    isLoading: categoryLoading,
+    data: categoryLocations,
+  }: CategoryLocationsResponse = useFetch('/api/categoryLocations');
+
+  const { isLoading: nearLoading, data: nearLocations }: NearLocationsResponse =
+    useFetch('/api/nearLocations');
+
+  /**
+   * TODO: Type Guard 관련
+   * !nearLocations -> Error 페이지를 보여줘야 하는게 좋아보임
+   * 임시로 !nearLocations 이면 Skeleton 을 보여주는 것으로 대체
+   */
 
   return (
     <>
@@ -64,14 +52,18 @@ export default function MainPage() {
         <Box sx={{ margin: '0 auto' }}>
           <Background />
           <Box sx={{ marginBottom: '5rem' }}>
-            {nearLocations.title ? (
-              <NearLocations nearLocations={nearLocations} />
-            ) : (
+            {nearLoading || !nearLocations ? (
               <SkeletonNearLocations />
+            ) : (
+              <NearLocations nearLocations={nearLocations} />
             )}
           </Box>
           <Box sx={{ marginBottom: '5rem' }}>
-            <CategoryLocations categoryLocations={categoryLocations} />
+            {categoryLoading || !categoryLocations ? (
+              <SkeletonNearLocations />
+            ) : (
+              <CategoryLocations categoryLocations={categoryLocations} />
+            )}
           </Box>
         </Box>
       </Container>

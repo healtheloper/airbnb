@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from 'react';
 
-interface State<T> {
+export interface ResponseState<T> {
   data?: T;
   error?: Error;
   isLoading: boolean;
@@ -14,14 +14,17 @@ type Action<T> =
 export default function useFetch<T>(
   url: string,
   options?: RequestInit,
-): State<T> {
-  const initState: State<T> = {
+): ResponseState<T> {
+  const initState: ResponseState<T> = {
     data: undefined,
     error: undefined,
     isLoading: false,
   };
 
-  function reducer(state: State<T>, action: Action<T>): State<T> {
+  function reducer(
+    state: ResponseState<T>,
+    action: Action<T>,
+  ): ResponseState<T> {
     switch (action.type) {
       case 'LOADING':
         return { ...state, isLoading: true };

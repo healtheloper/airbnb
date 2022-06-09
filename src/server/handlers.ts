@@ -1,10 +1,9 @@
 import { rest } from 'msw';
 
 import { delay } from '@common/util';
+import categoryLocations from '@server/dummyData/categoryLocations';
 import nearLocations from '@server/dummyData/nearLocations';
 import roomList from '@server/dummyData/roomList';
-
-import categoryLocations from './dummyData/categoryLocations';
 
 const getRooms: Parameters<typeof rest.get>[1] = async (_, res, ctx) => {
   await delay(1000);
@@ -26,7 +25,7 @@ const getCategoryLocations: Parameters<typeof rest.get>[1] = async (
   ctx,
 ) => {
   await delay(1000);
-  res(ctx.status(200), ctx.json(categoryLocations));
+  return res(ctx.status(200), ctx.json(categoryLocations));
 };
 
 export function handlers() {
