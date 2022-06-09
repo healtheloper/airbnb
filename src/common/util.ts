@@ -1,4 +1,4 @@
-export const getGeoLocation = () =>
+export const getGeoLocation = (): Promise<GeolocationPosition> =>
   new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -8,4 +8,11 @@ export const getGeoLocation = () =>
         reject(error.message);
       },
     );
+  });
+
+export const delay = (ms: number) =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve(true);
+    }, ms);
   });

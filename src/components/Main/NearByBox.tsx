@@ -1,17 +1,16 @@
 import { Box, Grid, Typography } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
-import { nearByData } from '@mocks/main';
+import { NearByInfoProps } from '@pages/MainPage';
 
-export default function NearByBox() {
+export default function NearByBox({ nearData }: any) {
   return (
     <>
       <Typography variant="h4" sx={{ marginBottom: '2rem' }}>
-        {nearByData.title}
+        {nearData.title}
       </Typography>
-
       <Grid container rowSpacing={3} columnSpacing={3}>
-        {nearByData.infos.map(data => (
+        {nearData.infos.map((data: NearByInfoProps) => (
           <Grid item xs={12} sm={6} md={6} lg={3} xl={3} key={data.uuid}>
             <FlexBox>
               <Box
