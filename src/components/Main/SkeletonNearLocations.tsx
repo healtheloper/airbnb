@@ -2,7 +2,7 @@ import { Skeleton, Grid } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
 
-export default function SkeletonNearByBox() {
+export default function SkeletonNearLocations() {
   return (
     <>
       <Skeleton variant="text" height={40} sx={{ borderRadius: '1rem' }} />

@@ -1,38 +1,50 @@
 import { Box, Container } from '@mui/material';
-import { useState, useEffect } from 'react';
 
-import { delay } from '@common/util';
 import Background from '@components/Background';
 import Footer from '@components/Footer';
-import AnyWhereBox from '@components/Main/AnyWhereBox';
-import NearByBox from '@components/Main/NearByBox';
-import SkeletonNearByBox from '@components/Main/SkeletonNearByBox';
-import { nearByData } from '@mocks/main';
+import CategoryLocations from '@components/Main/CategoryLocations';
+import NearLocations from '@components/Main/NearLocations';
+import SkeletonNearLocations from '@components/Main/SkeletonNearLocations';
+import useFetch, { ResponseState } from '@hooks/useFetch';
 
-export interface NearByInfoProps {
+export interface INearLocationsInfo {
   uuid: number;
   city: string;
   description: string;
   image: string;
 }
-export interface NearByDataProps {
-  title: string;
-  infos: NearByInfoProps[];
+
+export interface ICategoryLocationsInfo {
+  uuid: number;
+  image: string;
+  description: string;
 }
 
-export default function MainPage() {
-  const [nearData, setNearData] = useState<NearByDataProps>({
-    title: '',
-    infos: [],
-  });
+export interface IMainPageDatas<T> {
+  title: string;
+  infos: T[];
+}
 
-  useEffect(() => {
-    const fetchNearByData = async () => {
-      await delay(1000);
-      setNearData(nearByData);
-    };
-    fetchNearByData();
-  }, []);
+type NearLocationsResponse = ResponseState<IMainPageDatas<INearLocationsInfo>>;
+
+type CategoryLocationsResponse = ResponseState<
+  IMainPageDatas<ICategoryLocationsInfo>
+>;
+
+export default function MainPage() {
+  const {
+    isLoading: categoryLoading,
+    data: categoryLocations,
+  }: CategoryLocationsResponse = useFetch('/api/categoryLocations');
+
+  const { isLoading: nearLoading, data: nearLocations }: NearLocationsResponse =
+    useFetch('/api/nearLocations');
+
+  /**
+   * TODO: Type Guard 관련
+   * !nearLocations -> Error 페이지를 보여줘야 하는게 좋아보임
+   * 임시로 !nearLocations 이면 Skeleton 을 보여주는 것으로 대체
+   */
 
   return (
     <>
@@ -40,14 +52,18 @@ export default function MainPage() {
         <Box sx={{ margin: '0 auto' }}>
           <Background />
           <Box sx={{ marginBottom: '5rem' }}>
-            {nearData.title ? (
-              <NearByBox nearData={nearData} />
+            {nearLoading || !nearLocations ? (
+              <SkeletonNearLocations />
             ) : (
-              <SkeletonNearByBox />
+              <NearLocations nearLocations={nearLocations} />
             )}
           </Box>
           <Box sx={{ marginBottom: '5rem' }}>
-            <AnyWhereBox />
+            {categoryLoading || !categoryLocations ? (
+              <SkeletonNearLocations />
+            ) : (
+              <CategoryLocations categoryLocations={categoryLocations} />
+            )}
           </Box>
         </Box>
       </Container>
