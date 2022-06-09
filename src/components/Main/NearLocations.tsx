@@ -1,17 +1,21 @@
 import { Box, Grid, Typography } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
-import { NearByInfoProps } from '@pages/MainPage';
+import { IMainPageDatas, INearLocationsInfo } from '@pages/MainPage';
 
-export default function NearByBox({ nearData }: any) {
+interface NearLocationsProps {
+  nearLocations: IMainPageDatas<INearLocationsInfo>;
+}
+
+export default function NearLocations({ nearLocations }: NearLocationsProps) {
   return (
     <>
       <Typography variant="h4" sx={{ marginBottom: '2rem' }}>
-        {nearData.title}
+        {nearLocations.title}
       </Typography>
       <Grid container rowSpacing={3} columnSpacing={3}>
-        {nearData.infos.map((data: NearByInfoProps) => (
-          <Grid item xs={12} sm={6} md={6} lg={3} xl={3} key={data.uuid}>
+        {nearLocations.infos.map((info: INearLocationsInfo) => (
+          <Grid item xs={12} sm={6} md={6} lg={3} xl={3} key={info.uuid}>
             <FlexBox>
               <Box
                 sx={{
@@ -21,11 +25,11 @@ export default function NearByBox({ nearData }: any) {
                 }}
                 component="img"
                 alt="image"
-                src={data.image}
+                src={info.image}
               />
               <FlexBox fd="column" jc="center" sx={{ marginLeft: '1rem' }}>
-                <Typography>{data.city}</Typography>
-                <Typography>{data.description}</Typography>
+                <Typography>{info.city}</Typography>
+                <Typography>{info.description}</Typography>
               </FlexBox>
             </FlexBox>
           </Grid>

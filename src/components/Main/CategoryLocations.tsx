@@ -1,17 +1,24 @@
 import { Box, Grid, Typography } from '@mui/material';
 
 import FlexBox from '@components/FlexBox';
+import { IMainPageDatas, ICategoryLocationsInfo } from '@pages/MainPage';
 
-export default function AnyWhereBox({ categoryLocation }: any) {
+interface CategoryLocationsProps {
+  categoryLocations: IMainPageDatas<ICategoryLocationsInfo>;
+}
+
+export default function CategoryLocations({
+  categoryLocations,
+}: CategoryLocationsProps) {
   return (
     <>
       <Typography variant="h4" sx={{ marginBottom: '2rem' }}>
-        {categoryLocation.title}
+        {categoryLocations.title}
       </Typography>
 
       <Grid container rowSpacing={4} columnSpacing={4}>
-        {categoryLocation.infos.map((data: any) => (
-          <Grid item xs={12} sm={6} md={6} lg={3} xl={3} key={data.uuid}>
+        {categoryLocations.infos.map((info: ICategoryLocationsInfo) => (
+          <Grid item xs={12} sm={6} md={6} lg={3} xl={3} key={info.uuid}>
             <FlexBox fd="column">
               <Box
                 sx={{
@@ -19,10 +26,10 @@ export default function AnyWhereBox({ categoryLocation }: any) {
                 }}
                 component="img"
                 alt="image"
-                src={data.image}
+                src={info.image}
               />
               <Typography sx={{ marginTop: '1rem' }}>
-                {data.description}
+                {info.description}
               </Typography>
             </FlexBox>
           </Grid>

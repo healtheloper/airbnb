@@ -3,27 +3,38 @@ import { useState, useEffect } from 'react';
 
 import Background from '@components/Background';
 import Footer from '@components/Footer';
-import AnyWhereBox from '@components/Main/AnyWhereBox';
-import NearByBox from '@components/Main/NearByBox';
-import SkeletonNearByBox from '@components/Main/SkeletonNearByBox';
+import CategoryLocations from '@components/Main/CategoryLocations';
+import NearLocations from '@components/Main/NearLocations';
+import SkeletonNearLocations from '@components/Main/SkeletonNearLocations';
 
-export interface NearByInfoProps {
+export interface INearLocationsInfo {
   uuid: number;
   city: string;
   description: string;
   image: string;
 }
-export interface NearByDataProps {
+
+export interface ICategoryLocationsInfo {
+  uuid: number;
+  image: string;
+  description: string;
+}
+
+export interface IMainPageDatas<T> {
   title: string;
-  infos: NearByInfoProps[];
+  infos: T[];
 }
 
 export default function MainPage() {
-  const [nearData, setNearData] = useState<NearByDataProps>({
+  const [nearLocations, setNearLocations] = useState<
+    IMainPageDatas<INearLocationsInfo>
+  >({
     title: '',
     infos: [],
   });
-  const [categoryLocation, setcategoryLocation] = useState<NearByDataProps>({
+  const [categoryLocations, setCategoryLocations] = useState<
+    IMainPageDatas<ICategoryLocationsInfo>
+  >({
     title: '',
     infos: [],
   });
@@ -33,17 +44,17 @@ export default function MainPage() {
       fetch('/api/categoryLocations')
         .then(res => res.json())
         .then(data => {
-          setcategoryLocation(data);
+          setCategoryLocations(data);
         });
     };
-    const fetchNearByData = async () => {
+    const fetchNearLocations = async () => {
       fetch('/api/nearLocations')
         .then(res => res.json())
         .then(data => {
-          setNearData(data);
+          setNearLocations(data);
         });
     };
-    fetchNearByData();
+    fetchNearLocations();
     fetchCategoryLocations();
   }, []);
 
@@ -53,14 +64,14 @@ export default function MainPage() {
         <Box sx={{ margin: '0 auto' }}>
           <Background />
           <Box sx={{ marginBottom: '5rem' }}>
-            {nearData.title ? (
-              <NearByBox nearData={nearData} />
+            {nearLocations.title ? (
+              <NearLocations nearLocations={nearLocations} />
             ) : (
-              <SkeletonNearByBox />
+              <SkeletonNearLocations />
             )}
           </Box>
           <Box sx={{ marginBottom: '5rem' }}>
-            <AnyWhereBox categoryLocation={categoryLocation} />
+            <CategoryLocations categoryLocations={categoryLocations} />
           </Box>
         </Box>
       </Container>
