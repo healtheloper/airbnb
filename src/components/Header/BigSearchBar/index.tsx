@@ -1,23 +1,19 @@
-import SearchIcon from '@mui/icons-material/Search';
-import { Fab } from '@mui/material';
 import { Calendar, CalendarProvider } from 'react-carousel-calendar';
-import { useNavigate } from 'react-router-dom';
 
 import Chart from '@components/Chart';
 import FlexBox from '@components/FlexBox';
 import BigMenus from '@components/Header/BigSearchBar/BigMenus';
 import Modal from '@components/Header/BigSearchBar/Modal';
+import SearchButton from '@components/Header/BigSearchBar/SearchButton';
 import { MenuType } from '@components/Header/MiniSearchBar/Menu';
 import Persons from '@components/Persons';
 import color from '@constants/color';
-import fontSize from '@constants/fontSize';
 import widths from '@constants/widths';
 import { useHeaderDispatch, useHeaderState } from '@contexts/HeaderProvider';
 import { PersonProvider } from '@contexts/PersonProvider';
 import { PriceProvider } from '@contexts/PriceProvider';
 
 export default function BigSearchBar() {
-  const navigate = useNavigate();
   const headerDispatch = useHeaderDispatch();
   const headerState = useHeaderState();
 
@@ -44,6 +40,7 @@ export default function BigSearchBar() {
         throw Error('Menu Type not found');
     }
   };
+
   return (
     <CalendarProvider>
       <PriceProvider>
@@ -77,23 +74,7 @@ export default function BigSearchBar() {
               isSelectedType={isSelectedType}
               changeMenuType={changeMenuType}
             />
-            <Fab
-              variant="extended"
-              color="primary"
-              sx={{ width: '6rem', mr: '1rem', position: 'absolute', right: 0 }}
-              onClick={() => {
-                headerDispatch({ type: 'BODY_CLICK' });
-                navigate('/rooms');
-              }}
-            >
-              <SearchIcon
-                sx={{
-                  color: color.white,
-                  fontSize: fontSize.fontDefault,
-                }}
-              />
-              <span>검색</span>
-            </Fab>
+            <SearchButton />
             <Modal>{getModalItem()}</Modal>
           </FlexBox>
         </PersonProvider>
