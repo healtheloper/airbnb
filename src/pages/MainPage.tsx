@@ -1,13 +1,11 @@
 import { Box, Container } from '@mui/material';
 import { useState, useEffect } from 'react';
 
-import { delay } from '@common/util';
 import Background from '@components/Background';
 import Footer from '@components/Footer';
 import AnyWhereBox from '@components/Main/AnyWhereBox';
 import NearByBox from '@components/Main/NearByBox';
 import SkeletonNearByBox from '@components/Main/SkeletonNearByBox';
-import { nearByData } from '@mocks/main';
 
 export interface NearByInfoProps {
   uuid: number;
@@ -25,13 +23,28 @@ export default function MainPage() {
     title: '',
     infos: [],
   });
+  const [categoryLocation, setcategoryLocation] = useState<NearByDataProps>({
+    title: '',
+    infos: [],
+  });
 
   useEffect(() => {
+    const fetchCategoryLocations = async () => {
+      fetch('/api/categoryLocations')
+        .then(res => res.json())
+        .then(data => {
+          setcategoryLocation(data);
+        });
+    };
     const fetchNearByData = async () => {
-      await delay(1000);
-      setNearData(nearByData);
+      fetch('/api/nearLocations')
+        .then(res => res.json())
+        .then(data => {
+          setNearData(data);
+        });
     };
     fetchNearByData();
+    fetchCategoryLocations();
   }, []);
 
   return (
@@ -47,7 +60,7 @@ export default function MainPage() {
             )}
           </Box>
           <Box sx={{ marginBottom: '5rem' }}>
-            <AnyWhereBox />
+            <AnyWhereBox categoryLocation={categoryLocation} />
           </Box>
         </Box>
       </Container>

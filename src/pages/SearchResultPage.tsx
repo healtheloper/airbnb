@@ -68,7 +68,7 @@ export default function SearchResultPage() {
   useEffect(() => {
     // location.state의 값으로 서버에 파라미터 담아서 비동기 요청
     setSearchDataList(location.state);
-    fetch('http://localhost:3000/roomList.json')
+    fetch('/api/rooms')
       .then(res => res.json())
       .then(res => {
         if (res.data) {
