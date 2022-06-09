@@ -17,7 +17,7 @@ export default function Room({ room }: any) {
     bedroomCount,
   } = room;
 
-  const getOptions = () =>
+  const getRoomDetailOptions = () =>
     `최대 인원 ${maximumNum}명 침대 ${bedCount}개 욕실 ${bathroomCount}개 주방 무선 인터넷 에어컨 헤어드라이어`;
 
   return (
@@ -57,7 +57,7 @@ export default function Room({ room }: any) {
                 {title}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {getOptions()}
+                {getRoomDetailOptions()}
               </Typography>
             </Grid>
             <Grid item>
