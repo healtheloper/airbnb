@@ -8,8 +8,7 @@ const webpack = require('webpack');
 dotenv.config();
 
 const mode = process.env.NODE_ENV || 'development';
-const { KAKAO_MAP_KEY, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, NODE_ENV } =
-  process.env;
+const { KAKAO_MAP_KEY, NODE_ENV } = process.env;
 
 const PORT = 3000;
 
@@ -61,8 +60,6 @@ module.exports = {
     }),
     new webpack.EnvironmentPlugin({
       KAKAO_MAP_KEY,
-      GITHUB_CLIENT_ID,
-      GITHUB_CLIENT_SECRET,
       NODE_ENV,
     }),
   ],
