@@ -3,7 +3,19 @@ import moment from 'moment';
 
 import Room from '@components/SearchResult/Room';
 
-interface SearchDataListProps {
+interface RoomProps {
+  title: string;
+  imageUrl: string;
+  dailyPrice: number;
+  reviewCount: number;
+  ratingStarScore: number;
+  maximumNum: number;
+  bathroomCount: number;
+  bedCount: number;
+  bedroomCount: number;
+}
+
+export interface SearchDataListProps {
   check_in: string;
   check_out: string;
   price_min: number;
@@ -16,8 +28,13 @@ interface SearchDataListProps {
   cached_count: number;
 }
 
+interface RoomListType {
+  totalElements: number;
+  content: RoomProps[];
+}
+
 interface RoomsProps {
-  roomList: any;
+  roomList: RoomListType;
   searchDataList: SearchDataListProps;
 }
 
@@ -47,7 +64,7 @@ export default function Rooms({ roomList, searchDataList }: RoomsProps) {
   };
 
   return (
-    <Stack spacing={2} sx={{ padding: '1rem' }}>
+    <Stack spacing={2} sx={{ padding: '1rem', overflow: 'auto' }}>
       <Box sx={{ padding: '1rem' }}>
         <Typography variant="input1">{getTitle()}</Typography>
         <Typography
@@ -57,16 +74,15 @@ export default function Rooms({ roomList, searchDataList }: RoomsProps) {
           지도에서 선택한 지역의 숙소
         </Typography>
       </Box>
-      {roomList.content &&
-        roomList.content.map((room: any, idx: number) => (
-          <Room
-            key={`room-${idx + 1}`}
-            room={room}
-            checkIn={checkIn}
-            checkOut={checkOut}
-            guest={getGuestNum()}
-          />
-        ))}
+      {roomList?.content?.map((room: RoomProps, idx: number) => (
+        <Room
+          key={`room-${idx + 1}`}
+          room={room}
+          checkIn={checkIn}
+          checkOut={checkOut}
+          guest={getGuestNum()}
+        />
+      ))}
     </Stack>
   );
 }
