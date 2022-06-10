@@ -19,3 +19,13 @@ export const delay = (ms: number) =>
 
 export const differenceDate = (checkIn: string, checkOut: string) =>
   new Date(checkOut).getDate() - new Date(checkIn).getDate();
+
+export const getParamsFormat = (config: object) => {
+  const params = Object.entries(config)
+    .map(param => {
+      const [key, value] = param;
+      return `${key}=${value}`;
+    })
+    .join('&');
+  return `?${params}`;
+};

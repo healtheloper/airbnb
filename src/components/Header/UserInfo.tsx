@@ -1,24 +1,68 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
-import { Fab, Menu, Fade, MenuItem } from '@mui/material';
-import React, { useState } from 'react';
+import { Fab, Menu, Fade, MenuItem, Avatar } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
+import { getParamsFormat } from '@common/util';
+import { useHeaderState, useHeaderDispatch } from '@contexts/HeaderProvider';
 
 export default function UserInfo() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [avatarUrl, setAvatarUrl] = useState(localStorage.getItem('avatarUrl'));
+  const { isLogin } = useHeaderState();
+  const headerDispatch = useHeaderDispatch();
+
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleUserInfoClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const handleLoginClick = () => {
+    const loginBaseUrl = 'https://github.com/login/oauth/authorize';
+    const clientId = process.env.GITHUB_CLIENT_ID;
+    const redirectUri =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000/callback'
+        : 'https://puffinbnb.netlify.app/callback';
+    if (!clientId) throw Error('Github login client id not found');
+
+    const githubLoginConfig = {
+      client_id: clientId,
+      redirect_uri: redirectUri,
+    };
+    const params = getParamsFormat(githubLoginConfig);
+    window.location.href = `${loginBaseUrl}${params}`;
+  };
+
+  const handleLogoutClick = () => {
+    headerDispatch({ type: 'LOGOUT' });
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    if (isLogin) {
+      setAvatarUrl(localStorage.getItem('avatarUrl'));
+    } else {
+      setAvatarUrl(null);
+      localStorage.removeItem('avatarUrl');
+    }
+  }, [isLogin]);
+
   return (
     <div>
-      <Fab variant="extended" color="info" onClick={handleClick}>
+      <Fab variant="extended" color="info" onClick={handleUserInfoClick}>
         <MenuIcon />
-        <PersonIcon />
+        {avatarUrl ? (
+          <Avatar src={avatarUrl} sx={{ width: 30, height: 30 }} />
+        ) : (
+          <Avatar sx={{ width: 30, height: 30 }}>
+            <PersonIcon />
+          </Avatar>
+        )}
       </Fab>
       <Menu
         id="fade-menu"
@@ -42,7 +86,11 @@ export default function UserInfo() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>로그인</MenuItem>
+        {isLogin ? (
+          <MenuItem onClick={handleLogoutClick}>로그아웃</MenuItem>
+        ) : (
+          <MenuItem onClick={handleLoginClick}>로그인</MenuItem>
+        )}
       </Menu>
     </div>
   );
