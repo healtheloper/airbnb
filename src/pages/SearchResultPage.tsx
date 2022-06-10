@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { getGeoLocation, delay } from '@common/util';
-import Rooms from '@components/SearchResult/Rooms';
+import Rooms, { SearchDataListProps } from '@components/SearchResult/Rooms';
 import SkeletonRooms from '@components/SearchResult/SkeletonRooms';
 
 const { kakao } = window;
@@ -19,7 +19,7 @@ export default function SearchResultPage() {
   const mapRef = useRef();
   const location = useLocation();
   const [roomList, setRoomList] = useState([]);
-  const [searchDataList, setSearchDataList] = useState<any>({
+  const [searchDataList, setSearchDataList] = useState<SearchDataListProps>({
     check_in: '',
     check_out: '',
     price_min: 0,
@@ -84,7 +84,7 @@ export default function SearchResultPage() {
       ) : (
         <SkeletonRooms />
       )}
-      <Box ref={mapRef}>
+      <Box ref={mapRef} sx={{ height: '100vh' }}>
         {isLoading && <Skeleton variant="rectangular" height="100%" />}
       </Box>
     </Box>
