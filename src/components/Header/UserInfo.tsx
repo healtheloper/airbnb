@@ -2,13 +2,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import { Fab, Menu, Fade, MenuItem, Avatar } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { getParamsFormat } from '@common/util';
 import { useHeaderState, useHeaderDispatch } from '@contexts/HeaderProvider';
 
 export default function UserInfo() {
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [avatarUrl, setAvatarUrl] = useState(localStorage.getItem('avatarUrl'));
   const { isLogin } = useHeaderState();
@@ -42,6 +40,7 @@ export default function UserInfo() {
 
   const handleLogoutClick = () => {
     headerDispatch({ type: 'LOGOUT' });
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -61,7 +60,7 @@ export default function UserInfo() {
           <Avatar src={avatarUrl} sx={{ width: 30, height: 30 }} />
         ) : (
           <Avatar sx={{ width: 30, height: 30 }}>
-            {!avatarUrl && <PersonIcon />}
+            <PersonIcon />
           </Avatar>
         )}
       </Fab>
