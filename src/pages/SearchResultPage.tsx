@@ -1,7 +1,9 @@
 import { Box, Skeleton } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import { getGeoLocation } from '@common/util';
+import { getGeoLocation, delay } from '@common/util';
+import Rooms, { SearchDataListProps } from '@components/SearchResult/Rooms';
 import SkeletonRooms from '@components/SearchResult/SkeletonRooms';
 
 const { kakao } = window;
@@ -13,17 +15,24 @@ const wrapperStyle = {
   marginTop: '5.875rem',
 };
 
-const delay = (ms: number) =>
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true);
-    }, ms);
-  });
-
 export default function SearchResultPage() {
   const mapRef = useRef();
+  const location = useLocation();
+  const [roomList, setRoomList] = useState([]);
+  const [searchDataList, setSearchDataList] = useState<SearchDataListProps>({
+    check_in: '',
+    check_out: '',
+    price_min: 0,
+    price_max: 0,
+    adult: 0,
+    child: 0,
+    baby: 0,
+    page: 0,
+    limit: 0,
+    cached_count: 0,
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [userGeolocation, setUserGeoLocation] = useState([]);
+  const [userGeolocation, setUserGeoLocation] = useState<number[]>([]);
 
   useEffect(() => {
     const getUserGeoLocation = async () => {
@@ -56,10 +65,26 @@ export default function SearchResultPage() {
     }
   }, [userGeolocation]);
 
+  useEffect(() => {
+    // location.state의 값으로 서버에 파라미터 담아서 비동기 요청
+    setSearchDataList(location.state);
+    fetch('/api/rooms')
+      .then(res => res.json())
+      .then(res => {
+        if (res.data) {
+          setRoomList(res.data);
+        }
+      });
+  }, []);
+
   return (
     <Box sx={wrapperStyle}>
-      <SkeletonRooms />
-      <Box ref={mapRef}>
+      {roomList ? (
+        <Rooms roomList={roomList} searchDataList={searchDataList} />
+      ) : (
+        <SkeletonRooms />
+      )}
+      <Box ref={mapRef} sx={{ height: '100vh' }}>
         {isLoading && <Skeleton variant="rectangular" height="100%" />}
       </Box>
     </Box>

@@ -73,17 +73,19 @@ export default function BigMenu({
   const handleClickCloseBtn = () => {
     if (menuType === 'checkin') {
       calendarDispatch({ type: 'CHECK_IN_DELETE' });
+      priceDispatch({
+        type: 'SET_INIT_PRICE',
+      });
     } else if (menuType === 'checkout') {
       calendarDispatch({ type: 'CHECK_OUT_DELETE' });
+      priceDispatch({
+        type: 'SET_INIT_PRICE',
+      });
     } else if (menuType === 'price') {
       calendarDispatch({ type: 'CHECK_IN_DELETE' });
       calendarDispatch({ type: 'CHECK_OUT_DELETE' });
       priceDispatch({
-        type: 'SET_PRICE',
-        initMinPrice: 0,
-        initMaxPrice: 0,
-        minPrice: 0,
-        maxPrice: 0,
+        type: 'SET_INIT_PRICE',
       });
     } else if (menuType === 'persons') {
       personDispatch({ type: 'SET_ZERO_PERSONS' });

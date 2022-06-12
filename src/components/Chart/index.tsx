@@ -74,11 +74,15 @@ export default function Chart() {
       <FlexBox sx={{ position: 'relative' }} fd="column">
         <Typography sx={{ fontWeight: 700 }}>가격 범위</Typography>
         <Title priceState={priceState} getAveragePrice={getAveragePrice} />
-        {isCheckDate() && (
+        {isCheckDate() ? (
           <Graph
             priceState={priceState}
             accommodationData={accommodationData}
           />
+        ) : (
+          <Typography variant="input2" sx={{ textAlign: 'center' }}>
+            체크인, 체크아웃 날짜를 먼저 선택해주세요.
+          </Typography>
         )}
       </FlexBox>
     </FlexBox>
