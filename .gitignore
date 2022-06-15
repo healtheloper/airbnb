@@ -5,3 +5,5 @@ dist/
 
 # environment
 .env
+
+.DS_Store
